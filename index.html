@@ -352,11 +352,10 @@
     div.className = `slot ${clase}`;
 
     // 🕵️‍♂️ MODO DETECTIVE: mostramos el tipo que viene del Sheet
-    div.innerHTML = `
-      <h4>${t.participantes}</h4>
-      <span class="badge">${t.horario}</span>
-      <span class="badge" style="margin-left:8px; opacity:.75;">tipo: ${tipoRaw}</span>
-    `;
+   div.innerHTML = `
+  <h4>${t.participantes}</h4>
+  <span class="badge">${t.horario}</span>
+`;
 
     container.appendChild(div);
   });
