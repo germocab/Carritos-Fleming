@@ -57,14 +57,39 @@
       cursor: pointer;
       transition: 0.3s;
       border: 2px solid transparent;
+
+      /* Se mantiene tu base, pero ahora soporta imagen */
       background-color: #222;
+      background-size: cover;
+      background-position: center;
+
       position: relative;
       min-height: 100px;
       display: flex;
       align-items: flex-end;
+      overflow: hidden; /* para que el overlay respete el radio */
     }
 
-    .location-card.active { border-color: var(--primary-orange); background-color: #333; }
+    /* Overlay para legibilidad del texto (no cambia layout) */
+    .location-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.75),
+        rgba(0,0,0,0.15)
+      );
+      pointer-events: none;
+    }
+
+    .location-card.active { border-color: var(--primary-orange); }
+
+    .card-label {
+      position: relative;
+      z-index: 1;
+    }
+
     .card-label h2 { margin: 0; font-size: 1.1rem; }
 
     /* --- DETALLES (VISTA SECUNDARIA) --- */
@@ -74,84 +99,59 @@
       background-size: cover;
       background-position: center;
       position: relative;
+      overflow: hidden;
+    }
+
+    /* Overlay para que el botón y título se lean bien (no mueve nada) */
+    .hero-img::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.65),
+        rgba(0,0,0,0.10)
+      );
+      pointer-events: none;
     }
 
     .back-btn {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: rgba(0,0,0,0.6);
-      border: none;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
+      position: absolute; top: 15px; left: 15px;
+      background: rgba(0,0,0,0.6); border: none; color: white;
+      padding: 8px 15px; border-radius: 20px; cursor: pointer;
       display: none; /* Se muestra solo en móvil */
-      font-weight: bold;
-      align-items: center;
-      gap: 5px;
+      font-weight: bold; align-items: center; gap: 5px;
+      z-index: 2;
     }
 
-   .days-row {
-  display: flex;
-  gap: 10px;                /* espacio parejo */
-  margin: 20px 0;
-}
+    .days-row {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
 
-.days-row {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-}
+    .day-btn {
+      flex: 1;
+      text-align: center;
+      color: var(--text-gray);
+      cursor: pointer;
+      font-weight: 700;
 
-.day-btn {
-  flex: 1;
-  text-align: center;
-  color: var(--text-gray);
-  cursor: pointer;
-  font-weight: 700;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+      border-radius: 999px;
+      padding: 0 10px;
+      line-height: 1;
+    }
 
-  border-radius: 999px;
-  padding: 0 10px;
-
-  /* 🔧 centra el texto “de verdad” */
-  line-height: 1;
-}
-
-.day-btn.active {
-  background: #fff;
-  color: var(--primary-orange);
-
-  /* asegura que no vuelva al círculo */
-  border-radius: 999px;
-}
-
-  /* look de "chip" */
-  height: 32px;             /* 👈 más bajito */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;     /* 👈 píldora */
-  padding: 0 10px;          /* un poquito de aire */
-}
-
-.day-btn.active {
-  background: white;
-  color: var(--primary-orange);
-
-  /* quitamos el círculo */
-  width: auto;
-  height: 32px;             /* igual que el resto */
-  border-radius: 999px;
-  display: flex;
-  place-items: unset;       /* ya no usamos grid */
-}
-
+    .day-btn.active {
+      background: #fff;
+      color: var(--primary-orange);
+      border-radius: 999px;
+    }
 
     /* TURNOS */
     .slot { padding: 20px; border-radius: var(--radius); margin-bottom: 12px; }
@@ -160,13 +160,7 @@
     .turno-TD { background-color: var(--green) !important; }
 
     .slot h4 { margin: 0 0 10px 0; font-size: 1.05rem; color: white; }
-    .badge {
-      background: rgba(255,255,255,0.2);
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      color: white;
-    }
+    .badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; color: white; }
 
     /* --- LÓGICA RESPONSIVE --- */
     @media (min-width: 768px) {
@@ -205,7 +199,7 @@
           <div class="card-label"><h2>Santa Zita</h2></div>
         </div>
 
-        <div class="location-card" onclick="selectPoint('Visviri/Supermercado Santa Isabel', this)">
+        <div class="location-card" onclick="selectPoint('Visviri / Santa Isabel', this)">
           <div class="card-label"><h2>Visviri / Santa Isabel</h2></div>
         </div>
 
@@ -213,7 +207,7 @@
           <div class="card-label"><h2>Feria de Francisco Bilbao (Curaco)</h2></div>
         </div>
 
-        <div class="location-card" onclick="selectPoint('Parque Intercomunal La Reina (Duqueco)', this)">
+        <div class="location-card" onclick="selectPoint('Parque Intercomunal', this)">
           <div class="card-label"><h2>Parque Intercomunal</h2></div>
         </div>
 
@@ -254,6 +248,40 @@
     let currentDay = 'Lunes';
     let currentPoint = 'Clínica Cordillera';
 
+    // ✅ IMÁGENES POR PUNTO (cambia las URLs por las tuyas cuando quieras)
+    const POINT_IMAGES = {
+      "Clínica Cordillera": "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1200&q=60",
+      "Supermercado Lider": "https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=1200&q=60",
+      "Santa Zita": "https://images.unsplash.com/photo-1520628186254-01d3b1a13a74?auto=format&fit=crop&w=1200&q=60",
+      "Visviri / Santa Isabel": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=1200&q=60",
+      "Feria de Francisco Bilbao (Curaco)": "https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&w=1200&q=60",
+      "Parque Intercomunal": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=60",
+      "Patricia": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=60"
+    };
+
+    function applyImagesToCards() {
+      document.querySelectorAll('.location-card').forEach(card => {
+        const titleEl = card.querySelector('h2');
+        const name = titleEl ? titleEl.innerText.trim() : "";
+        const img = POINT_IMAGES[name];
+
+        if (img) {
+          card.style.backgroundImage = `url('${img}')`;
+        } else {
+          card.style.backgroundImage = 'none';
+          card.style.backgroundColor = '#222';
+        }
+      });
+    }
+
+    function setHeroImage(pointName) {
+      const hero = document.querySelector('.hero-img');
+      const img = POINT_IMAGES[pointName];
+
+      if (img) hero.style.backgroundImage = `url('${img}')`;
+      else hero.style.backgroundImage = 'none';
+    }
+
     async function loadData() {
       try {
         const response = await fetch(SHEET_URL);
@@ -264,7 +292,6 @@
           const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
           return {
             dia: cols[0] ? cols[0].trim() : "",
-            // 👇 importantísimo: dejamos el tipo ya “limpio”
             tipo: cols[1] ? cols[1].trim().replace(/"/g, "").toUpperCase() : "",
             participantes: cols[2] ? cols[2].trim().replace(/"/g, "") : "",
             horario: cols[3] ? cols[3].trim().replace(/"/g, "") : "",
@@ -281,6 +308,9 @@
     function selectPoint(name, el) {
       currentPoint = name;
       document.getElementById('currentPointTitle').innerText = name;
+
+      // ✅ actualiza imagen del header
+      setHeroImage(name);
 
       document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
@@ -308,60 +338,45 @@
     }
 
     function renderSlots() {
-  const container = document.getElementById('slotsContainer');
-  container.innerHTML = '';
+      const container = document.getElementById('slotsContainer');
+      container.innerHTML = '';
 
-  const filtered = allData.filter(d =>
-    d.dia.toLowerCase() === currentDay.toLowerCase() &&
-    d.punto === currentPoint
-  );
+      const filtered = allData.filter(d =>
+        d.dia.toLowerCase() === currentDay.toLowerCase() &&
+        d.punto === currentPoint
+      );
 
-  if (filtered.length === 0) {
-    container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
-    return;
-  }
+      if (filtered.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
+        return;
+      }
 
-  filtered.forEach(t => {
-    const div = document.createElement('div');
+      filtered.forEach(t => {
+        const div = document.createElement('div');
 
-    // ✅ Limpiamos el tipo lo más posible (incluye espacios raros)
-    const tipoRaw = (t.tipo ?? '').toString();
-    const tipo = tipoRaw
-      .replace(/\u00A0/g, ' ')     // NBSP -> espacio normal
-      .replace(/\s+/g, '')        // quitamos TODOS los espacios
-      .replace(/"/g, '')          // comillas
-      .toUpperCase();
+        const tipoRaw = (t.tipo ?? '').toString();
+        const tipo = tipoRaw
+          .replace(/\u00A0/g, ' ')
+          .replace(/\s+/g, '')
+          .replace(/"/g, '')
+          .toUpperCase();
 
-    // ✅ Lógica robusta:
-    // - Si contiene TD (TD, TD1, TDTARDE, T/D -> lo normalizamos abajo)
-    // - Si empieza con T (T, T1, TARDE)
-    // - Si empieza con M (M, M1, MAÑANA)
-    let clase = 'turno-M';
+        const tipoNorm = tipo.replace('/', '');
 
-    // normalizamos casos tipo "T/D" a "TD"
-    const tipoNorm = tipo.replace('/', '');
+        let clase = 'turno-M';
+        if (tipoNorm.includes('TD')) clase = 'turno-TD';
+        else if (tipoNorm.startsWith('T')) clase = 'turno-T';
+        else if (tipoNorm.startsWith('M')) clase = 'turno-M';
 
-    if (tipoNorm.includes('TD')) {
-      clase = 'turno-TD';
-    } else if (tipoNorm.startsWith('T')) {
-      clase = 'turno-T';
-    } else if (tipoNorm.startsWith('M')) {
-      clase = 'turno-M';
+        div.className = `slot ${clase}`;
+        div.innerHTML = `<h4>${t.participantes}</h4><span class="badge">${t.horario}</span>`;
+        container.appendChild(div);
+      });
     }
 
-    div.className = `slot ${clase}`;
-
-    // 🕵️‍♂️ MODO DETECTIVE: mostramos el tipo que viene del Sheet
-   div.innerHTML = `
-  <h4>${t.participantes}</h4>
-  <span class="badge">${t.horario}</span>
-`;
-
-    container.appendChild(div);
-  });
-}
-
-
+    // ✅ Inicialización
+    applyImagesToCards();        // pone imagen a las tarjetas del listado
+    setHeroImage(currentPoint);  // pone imagen arriba según el punto inicial
     loadData();
   </script>
 </body>
