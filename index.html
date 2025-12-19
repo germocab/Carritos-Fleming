@@ -16,7 +16,7 @@
         }
 
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-white); display: flex; justify-content: center; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-white); display: flex; justify-content: center; min-height: 100vh; }
 
         .app-wrapper {
             display: grid;
@@ -29,7 +29,7 @@
 
         .screen { background-color: var(--bg-dark); border-radius: var(--radius); overflow: hidden; height: 850px; display: flex; flex-direction: column; }
 
-        /* LADO IZQUIERDO: LOCACIONES */
+        /* --- LOCACIONES (LISTA PRINCIPAL) --- */
         .scroll-container { padding: 20px; overflow-y: auto; flex-grow: 1; }
         .location-card {
             padding: 20px; border-radius: var(--radius); margin-bottom: 15px;
@@ -37,29 +37,50 @@
             background-color: #222; position: relative; min-height: 100px; display: flex; align-items: flex-end;
         }
         .location-card.active { border-color: var(--primary-orange); background-color: #333; }
-        .card-label h2 { margin: 0; font-size: 1.1rem; position: relative; z-index: 2; }
+        .card-label h2 { margin: 0; font-size: 1.1rem; }
 
-        /* LADO DERECHO: DETALLES */
-        .hero-img { height: 160px; background-color: #333; background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600'); background-size: cover; background-position: center; }
+        /* --- DETALLES (VISTA SECUNDARIA) --- */
+        .hero-img { height: 160px; background-color: #333; background-size: cover; background-position: center; position: relative; }
+        
+        .back-btn {
+            position: absolute; top: 15px; left: 15px;
+            background: rgba(0,0,0,0.6); border: none; color: white;
+            padding: 8px 15px; border-radius: 20px; cursor: pointer;
+            display: none; /* Se muestra solo en móvil */
+            font-weight: bold; align-items: center; gap: 5px;
+        }
+
         .days-row { display: flex; justify-content: space-between; margin: 20px 0; }
         .day-btn { color: var(--text-gray); cursor: pointer; padding: 10px; font-weight: bold; }
         .day-btn.active { background: white; color: var(--primary-orange); border-radius: 50%; width: 38px; height: 38px; display: grid; place-items: center; }
 
-        /* TURNOS Y COLORES */
+        /* TURNOS */
         .slot { padding: 20px; border-radius: var(--radius); margin-bottom: 12px; }
         .turno-M { background-color: var(--primary-orange) !important; }
         .turno-T { background-color: var(--bg-card-blue) !important; }
         .slot h4 { margin: 0 0 10px 0; font-size: 1.05rem; color: white; }
         .badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; color: white; }
 
-        @media (min-width: 768px) { .app-wrapper { grid-template-columns: 350px 1fr; } }
+        /* --- LÓGICA RESPONSIVE --- */
+        @media (min-width: 768px) {
+            .app-wrapper { grid-template-columns: 350px 1fr; }
+            #detail-screen { display: flex !important; } /* Siempre visible en PC */
+            .back-btn { display: none !important; }
+        }
+
+        @media (max-width: 767px) {
+            .app-wrapper { padding: 0; }
+            .screen { height: 100vh; border-radius: 0; }
+            #detail-screen { display: none; } /* Oculto por defecto en móvil */
+            .back-btn { display: flex; }
+        }
         .p-20 { padding: 20px; }
     </style>
 </head>
 <body>
 
     <div class="app-wrapper">
-        <section class="screen">
+        <section class="screen" id="list-screen">
             <div class="p-20"><h1 style="margin:0">Locaciones</h1></div>
             <div class="scroll-container">
                 <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this)">
@@ -86,8 +107,10 @@
             </div>
         </section>
 
-        <section class="screen">
-            <div class="hero-img"></div>
+        <section class="screen" id="detail-screen">
+            <div class="hero-img">
+                <button class="back-btn" onclick="goBack()">← Volver</button>
+            </div>
             <div class="p-20">
                 <h2 id="currentPointTitle" style="margin:0">Clínica Cordillera</h2>
                 <div class="days-row">
@@ -97,7 +120,7 @@
                     <div class="day-btn" onclick="setDay('Jueves', this)">Jue</div>
                     <div class="day-btn" onclick="setDay('Viernes', this)">Vie</div>
                 </div>
-                <div id="slotsContainer">Cargando turnos desde la nube...</div>
+                <div id="slotsContainer">Cargando...</div>
             </div>
         </section>
     </div>
@@ -113,11 +136,9 @@
             try {
                 const response = await fetch(SHEET_URL);
                 const text = await response.text();
-                // Limpieza de filas para evitar errores de lectura
                 const rows = text.split(/\r?\n/).filter(row => row.trim() !== "").slice(1);
                 
                 allData = rows.map(row => {
-                    // Regex avanzada para separar por comas ignorando comas dentro de comillas
                     const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     return {
                         dia: cols[0] ? cols[0].trim() : "",
@@ -129,7 +150,7 @@
                 });
                 renderSlots();
             } catch (e) {
-                document.getElementById('slotsContainer').innerHTML = "Error al conectar con la base de datos.";
+                document.getElementById('slotsContainer').innerHTML = "Error de conexión.";
             }
         }
 
@@ -139,6 +160,18 @@
             document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
             renderSlots();
+
+            // En móvil, cambiar de pantalla
+            if (window.innerWidth < 768) {
+                document.getElementById('list-screen').style.display = 'none';
+                document.getElementById('detail-screen').style.display = 'flex';
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function goBack() {
+            document.getElementById('list-screen').style.display = 'flex';
+            document.getElementById('detail-screen').style.display = 'none';
         }
 
         function setDay(day, el) {
@@ -151,32 +184,21 @@
         function renderSlots() {
             const container = document.getElementById('slotsContainer');
             container.innerHTML = '';
-
-            const filtered = allData.filter(d => 
-                d.dia.toLowerCase() === currentDay.toLowerCase() && 
-                d.punto === currentPoint
-            );
+            const filtered = allData.filter(d => d.dia.toLowerCase() === currentDay.toLowerCase() && d.punto === currentPoint);
 
             if(filtered.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos registrados en <b>${currentPoint}</b> para el día <b>${currentDay}</b>.</p>`;
+                container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
                 return;
             }
 
             filtered.forEach(t => {
                 const div = document.createElement('div');
-                // Lógica de color blindada
-                const isTarde = t.tipo.includes('T');
-                div.className = `slot ${isTarde ? 'turno-T' : 'turno-M'}`;
-                
-                div.innerHTML = `
-                    <h4>${t.participantes}</h4>
-                    <span class="badge">${t.horario}</span>
-                `;
+                div.className = `slot ${t.tipo.includes('T') ? 'turno-T' : 'turno-M'}`;
+                div.innerHTML = `<h4>${t.participantes}</h4><span class="badge">${t.horario}</span>`;
                 container.appendChild(div);
             });
         }
 
-        // Carga inicial
         loadData();
     </script>
 </body>
