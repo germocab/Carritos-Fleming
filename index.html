@@ -98,14 +98,37 @@
   margin: 20px 0;
 }
 
+.days-row {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
 .day-btn {
-  flex: 1;                  /* todos mismo ancho */
+  flex: 1;
   text-align: center;
   color: var(--text-gray);
   cursor: pointer;
-  font-weight: bold;
-  padding: 0;                 /* 🔑 quita cualquier empuje vertical */
-  line-height: 1;             /* 🔑 evita desbalance de la fuente */
+  font-weight: 700;
+
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  padding: 0 10px;
+
+  /* 🔧 centra el texto “de verdad” */
+  line-height: 1;
+}
+
+.day-btn.active {
+  background: #fff;
+  color: var(--primary-orange);
+
+  /* asegura que no vuelva al círculo */
+  border-radius: 999px;
 }
 
   /* look de "chip" */
