@@ -197,7 +197,7 @@
 
             filtered.forEach(t => {
                 const div = document.createElement('div');
-                div.className = `slot ${t.tipo.includes('T') ? 'turno-T' : 'turno-M'}`;
+                div.className = `slot ${t.tipo.includes('T') ? 'turno-T' : 'turno-M' : 'turno-TD'}`;
                 div.innerHTML = `<h4>${t.participantes}</h4><span class="badge">${t.horario}</span>`;
                 container.appendChild(div);
             });
