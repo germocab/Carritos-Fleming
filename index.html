@@ -3,211 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Médica</title>
+    <title>WebApp Cordillera Responsive</title>
     <style>
-        /* --- CSS: Estilos Globales --- */
         :root {
             --bg-dark: #121212;
+            --bg-body: #1e1e1e;
             --bg-card-dark: #2c2c3e;
             --primary-orange: #f36100;
             --orange-grad: linear-gradient(135deg, #f36100, #b34700);
             --text-white: #ffffff;
             --text-gray: #a0a0a0;
+            --radius: 24px;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-white);
             display: flex;
             justify-content: center;
-            color: var(--text-white);
+            min-height: 100vh;
         }
 
-        /* Contenedor del Celular */
-        .phone-container {
-            width: 375px;
-            height: 812px;
-            background-color: var(--bg-dark);
-            position: relative;
-            overflow-y: auto;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        /* --- PANTALLA 1: LOCACIONES --- */
-        #screen-home { padding: 20px; }
-        
-        h1 { font-size: 2.2rem; margin: 20px 0 30px 0; }
-
-        .card {
+        /* Contenedor Principal Responsive */
+        .app-wrapper {
+            display: grid;
+            grid-template-columns: 1fr; /* Por defecto 1 columna (Móvil) */
+            gap: 20px;
             width: 100%;
-            height: 180px;
-            border-radius: 25px;
-            margin-bottom: 20px;
-            position: relative;
-            display: flex;
-            align-items: flex-end;
-            cursor: pointer;
-            overflow: hidden;
-            transition: transform 0.2s;
+            max-width: 900px;
+            padding: 20px;
         }
 
-        .card:active { transform: scale(0.98); }
+        /* Pantallas */
+        .screen {
+            background-color: var(--bg-dark);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
 
-        .card-img {
+        /* --- ESTILOS COMPARTIDOS --- */
+        h1 { font-size: 2.2rem; margin: 25px 20px; }
+        .p-20 { padding: 20px; }
+
+        /* Tarjetas (Home) */
+        .card {
+            margin: 0 20px 20px 20px;
+            height: 160px;
+            border-radius: var(--radius);
             background-size: cover;
             background-position: center;
-            background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent 70%), 
-                              url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=400');
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .card-orange { background: var(--orange-grad); }
+        .card:hover { transform: translateY(-5px); }
 
-        .card-content { padding: 20px; }
-        .card-content h2 { margin: 0; font-size: 1.4rem; }
-        .card-content span { font-size: 0.9rem; opacity: 0.8; }
-
-        /* --- PANTALLA 2: DETALLE --- */
-        #screen-detail { display: none; }
-
-        .header-image {
+        .card-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             width: 100%;
+            padding: 20px;
+            border-radius: var(--radius);
+        }
+
+        .bg-orange { background: var(--orange-grad); }
+
+        /* Detalles (Clinic) */
+        .hero-img {
             height: 250px;
-            background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=400');
+            background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600');
             background-size: cover;
+            background-position: center;
             position: relative;
         }
 
         .back-btn {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 15px; left: 15px;
             background: rgba(0,0,0,0.5);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
+            border: none; color: white;
+            width: 40px; height: 40px;
+            border-radius: 50%; cursor: pointer;
         }
 
-        .detail-body { padding: 20px; }
-
-        .days-selector {
+        .days-row {
             display: flex;
             justify-content: space-between;
-            margin: 25px 0;
+            margin: 20px 0;
+            padding: 0 10px;
         }
 
-        .day {
+        .day-btn {
             color: var(--text-gray);
+            font-weight: 500;
             cursor: pointer;
             padding: 10px;
         }
 
-        .day.active {
+        .day-btn.active {
             background: white;
             color: var(--primary-orange);
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            width: 38px; height: 38px;
+            display: grid; place-items: center;
         }
 
-        /* Turnos/Bloques */
         .slot {
-            padding: 25px;
-            border-radius: 25px;
+            padding: 20px;
+            border-radius: var(--radius);
             margin-bottom: 15px;
         }
-
+        
         .slot-orange { background: var(--primary-orange); }
         .slot-dark { background: var(--bg-card-dark); }
 
-        .slot h3 { margin: 0 0 15px 0; font-size: 1.2rem; }
-        .time-tag {
-            background: rgba(255,255,255,0.2);
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 0.85rem;
+        .badge {
+            background: rgba(255,255,255,0.25);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* --- MEDIA QUERIES (MAGIA RESPONSIVE) --- */
+        
+        /* Escritorio: Mostrar dos pantallas lado a lado */
+        @media (min-width: 768px) {
+            .app-wrapper {
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+            }
+            #screen-detail { display: flex !important; } /* Siempre visible en escritorio */
+            .back-btn { display: none; } /* No hace falta volver en escritorio */
+        }
+
+        /* Móvil: Mostrar una sola pantalla y alternar con JS */
+        @media (max-width: 767px) {
+            #screen-detail { display: none; }
+            .app-wrapper { padding: 0; }
+            .screen { border-radius: 0; min-height: 100vh; }
         }
     </style>
 </head>
 <body>
 
-    <div class="phone-container">
+    <div class="app-wrapper">
         
-        <div id="screen-home">
+        <section id="screen-home" class="screen">
             <h1>Locaciones</h1>
 
-            <div class="card card-img" onclick="showDetail()">
-                <div class="card-content">
-                    <h2>Clínica Cordillera</h2>
-                    <span>📅 Lunes a Viernes</span>
+            <div class="card" style="background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=400');" onclick="toggleScreen('detail')">
+                <div class="card-overlay">
+                    <h2 style="margin:0">Clínica Cordillera</h2>
+                    <small>📅 Lun a Vie</small>
                 </div>
             </div>
 
-            <div class="card card-img" style="filter: grayscale(0.5);">
-                <div class="card-content">
-                    <h2>Supermercado Lider</h2>
-                    <span>📅 Lunes a Viernes</span>
+            <div class="card" style="background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400');">
+                <div class="card-overlay">
+                    <h2 style="margin:0">Supermercado Lider</h2>
+                    <small>📅 Lun a Vie</small>
                 </div>
             </div>
 
-            <div class="card card-orange">
-                <div class="card-content">
-                    <h2>Santa Zita</h2>
-                    <span>📅 Lunes a Viernes</span>
+            <div class="card bg-orange">
+                <div class="card-overlay">
+                    <h2 style="margin:0">Santa Zita</h2>
+                    <small>📅 Lun a Vie</small>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="screen-detail">
-            <div class="header-image">
-                <button class="back-btn" onclick="showHome()">←</button>
+        <section id="screen-detail" class="screen">
+            <div class="hero-img">
+                <button class="back-btn" onclick="toggleScreen('home')">←</button>
             </div>
             
-            <div class="detail-body">
+            <div class="p-20">
                 <h2 style="font-size: 1.8rem; margin: 0;">Clínica Cordillera</h2>
-                <p style="color: var(--text-gray);">📅 Lunes a Viernes</p>
+                <p style="color: var(--text-gray); margin: 5px 0;">📅 Lunes a Viernes</p>
 
-                <div class="days-selector">
-                    <div class="day active">Lun</div>
-                    <div class="day">Mar</div>
-                    <div class="day">Mie</div>
-                    <div class="day">Jue</div>
-                    <div class="day">Vie</div>
+                <div class="days-row">
+                    <div class="day-btn active">Lun</div>
+                    <div class="day-btn">Mar</div>
+                    <div class="day-btn">Mie</div>
+                    <div class="day-btn">Jue</div>
+                    <div class="day-btn">Vie</div>
                 </div>
 
                 <div class="slot slot-orange">
-                    <h3>Armando Contreras y Lilian De Krzok</h3>
-                    <span class="time-tag">08:00 - 10:00</span>
+                    <h4 style="margin: 0 0 10px 0;">Armando Contreras y Lilian De Krzok</h4>
+                    <span class="badge">08:00 - 10:00</span>
                 </div>
 
                 <div class="slot slot-dark">
-                    <h3>Ingrid Arnold y Paz Martinez</h3>
-                    <span class="time-tag">18:00 - 20:00</span>
+                    <h4 style="margin: 0 0 10px 0;">Ingrid Arnold y Paz Martinez</h4>
+                    <span class="badge">18:00 - 20:00</span>
                 </div>
             </div>
-        </div>
+        </section>
 
     </div>
 
     <script>
-        function showDetail() {
-            document.getElementById('screen-home').style.display = 'none';
-            document.getElementById('screen-detail').style.display = 'block';
+        function toggleScreen(target) {
+            // Solo ejecuta el cambio visual si estamos en vista móvil (ancho < 768px)
+            if (window.innerWidth < 768) {
+                const home = document.getElementById('screen-home');
+                const detail = document.getElementById('screen-detail');
+
+                if (target === 'detail') {
+                    home.style.display = 'none';
+                    detail.style.display = 'flex';
+                } else {
+                    home.style.display = 'flex';
+                    detail.style.display = 'none';
+                }
+            }
         }
 
-        function showHome() {
-            document.getElementById('screen-home').style.display = 'block';
-            document.getElementById('screen-detail').style.display = 'none';
-        }
+        // Reajustar visibilidad si se cambia el tamaño de la ventana
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                document.getElementById('screen-home').style.display = 'flex';
+                document.getElementById('screen-detail').style.display = 'flex';
+            }
+        });
     </script>
 </body>
 </html>
