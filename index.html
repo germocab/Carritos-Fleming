@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Predicación - Turnos</title>
+    <title>Sistema de Predicación - Turnos Corregido</title>
     <style>
         :root {
             --bg-dark: #121212;
             --bg-body: #1e1e1e;
-            --bg-card-blue: #2c2c3e;
-            --primary-orange: #f36100;
+            --bg-card-blue: #2c2c3e; /* Color Azul para Tarde */
+            --primary-orange: #f36100; /* Color Naranja para Mañana */
             --text-white: #ffffff;
             --text-gray: #a0a0a0;
             --radius: 24px;
@@ -43,63 +43,43 @@
             flex-direction: column; 
         }
 
-        /* --- LADO IZQUIERDO: LOCACIONES (CON SCROLL) --- */
-        .scroll-container {
-            padding: 20px;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
-        /* Personalización de barra de scroll */
-        .scroll-container::-webkit-scrollbar { width: 6px; }
-        .scroll-container::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-
+        /* --- LADO IZQUIERDO: LOCACIONES --- */
+        .scroll-container { padding: 20px; overflow-y: auto; flex-grow: 1; }
         .location-card {
-            padding: 20px;
-            border-radius: var(--radius);
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 2px solid transparent;
-            background-color: #222;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            min-height: 100px;
-            display: flex;
-            align-items: flex-end;
+            padding: 20px; border-radius: var(--radius); margin-bottom: 15px;
+            cursor: pointer; transition: 0.3s; border: 2px solid transparent;
+            background-color: #222; background-size: cover; background-position: center;
+            position: relative; min-height: 100px; display: flex; align-items: flex-end;
         }
-        
         .location-card.active { border-color: var(--primary-orange); }
-        .location-card:hover { transform: scale(1.02); }
-        
-        .card-label { position: relative; z-index: 2; }
         .overlay {
-            position: absolute;
-            top:0; left:0; width:100%; height:100%;
+            position: absolute; top:0; left:0; width:100%; height:100%;
             background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
             border-radius: calc(var(--radius) - 2px);
         }
+        .card-label { position: relative; z-index: 2; }
 
-        /* --- LADO DERECHO: DETALLES --- */
-        .hero-img { height: 160px; background: #333; background-size: cover; transition: 0.5s; }
-        
+        /* --- LADO DERECHO: TURNOS --- */
+        .hero-img { height: 160px; background-size: cover; transition: 0.5s; background-color: #333; }
         .days-row { display: flex; justify-content: space-between; margin: 20px 0; }
-        .day-btn { color: var(--text-gray); cursor: pointer; padding: 10px; font-weight: bold; font-size: 0.9rem; }
+        .day-btn { color: var(--text-gray); cursor: pointer; padding: 10px; font-weight: bold; }
         .day-btn.active { 
             background: white; color: var(--primary-orange); 
             border-radius: 50%; width: 38px; height: 38px; 
             display: grid; place-items: center; 
         }
 
-        .slot { padding: 20px; border-radius: var(--radius); margin-bottom: 12px; animation: fadeIn 0.4s; }
-        .slot-M { background: var(--primary-orange); } 
-        .slot-T { background: var(--bg-card-blue); }   
+        /* --- CLASES DE COLOR PARA TURNOS --- */
+        .slot { padding: 20px; border-radius: var(--radius); margin-bottom: 12px; }
+        
+        /* Turno Mañana (M) -> Naranja */
+        .slot.turno-M { background-color: var(--primary-orange) !important; }
+        
+        /* Turno Tarde (T) -> Azul */
+        .slot.turno-T { background-color: var(--bg-card-blue) !important; }
         
         .slot h4 { margin: 0 0 10px 0; font-size: 1.05rem; }
         .badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (min-width: 768px) { .app-wrapper { grid-template-columns: 350px 1fr; } }
         .p-20 { padding: 20px; }
@@ -111,42 +91,27 @@
         <section class="screen">
             <div class="p-20"><h1 style="margin:0">Locaciones</h1></div>
             <div class="scroll-container">
-                
                 <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this, 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600')">
-                    <div class="overlay"></div>
-                    <div class="card-label"><h2>Clínica Cordillera</h2><small>Lun a Vie</small></div>
+                    <div class="overlay"></div><div class="card-label"><h2>Clínica Cordillera</h2></div>
                 </div>
-
                 <div class="location-card" onclick="selectPoint('Supermercado Lider', this, 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=600')">
-                    <div class="overlay"></div>
-                    <div class="card-label"><h2>Supermercado Lider</h2><small>Lun a Vie</small></div>
+                    <div class="overlay"></div><div class="card-label"><h2>Supermercado Lider</h2></div>
                 </div>
-
                 <div class="location-card" onclick="selectPoint('Santa Zita', this, 'https://images.unsplash.com/photo-1590073242672-ad953835cc39?q=80&w=600')">
-                    <div class="overlay"></div>
-                    <div class="card-label"><h2>Santa Zita</h2><small>Lun a Vie</small></div>
+                    <div class="overlay"></div><div class="card-label"><h2>Santa Zita</h2></div>
                 </div>
-
                 <div class="location-card" onclick="selectPoint('Visviri/Santa Isabel', this, 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?q=80&w=600')">
-                    <div class="overlay"></div>
-                    <div class="card-label"><h2>Visviri / Santa Isabel</h2><small>Lun a Vie</small></div>
+                    <div class="overlay"></div><div class="card-label"><h2>Visviri / Santa Isabel</h2></div>
                 </div>
-
                 <div class="location-card" onclick="selectPoint('Feria Bilbao', this, 'https://images.unsplash.com/photo-1488459711615-228f3979731c?q=80&w=600')">
-                    <div class="overlay"></div>
-                    <div class="card-label"><h2>Feria Bilbao</h2><small>Sábados</small></div>
+                    <div class="overlay"></div><div class="card-label"><h2>Feria Bilbao</h2></div>
                 </div>
-
                 <div class="location-card" onclick="selectPoint('Parque Intercomunal', this, 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=600')">
-                    <div class="overlay"></div>
-                    <div class="card-label"><h2>Parque Intercomunal</h2><small>Lun a Vie</small></div>
+                    <div class="overlay"></div><div class="card-label"><h2>Parque Intercomunal</h2></div>
                 </div>
-
                 <div class="location-card" onclick="selectPoint('Patricia', this, 'https://images.unsplash.com/photo-1516594798947-e65505dbb29d?q=80&w=600')">
-                    <div class="overlay"></div>
-                    <div class="card-label"><h2>Patricia</h2><small>Lun a Vie</small></div>
+                    <div class="overlay"></div><div class="card-label"><h2>Patricia</h2></div>
                 </div>
-
             </div>
         </section>
 
@@ -154,7 +119,6 @@
             <div class="hero-img" id="heroImg" style="background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600')"></div>
             <div class="p-20">
                 <h2 id="currentPointTitle" style="margin:0">Clínica Cordillera</h2>
-                
                 <div class="days-row">
                     <div class="day-btn active" onclick="setDay('Lunes', this)">Lun</div>
                     <div class="day-btn" onclick="setDay('Martes', this)">Mar</div>
@@ -162,7 +126,6 @@
                     <div class="day-btn" onclick="setDay('Jueves', this)">Jue</div>
                     <div class="day-btn" onclick="setDay('Viernes', this)">Vie</div>
                 </div>
-
                 <div id="slotsContainer"></div>
             </div>
         </section>
@@ -184,11 +147,11 @@
                 allData = rows.map(row => {
                     const cols = row.split(',');
                     return {
-                        dia: cols[0]?.trim(),
-                        tipo: cols[1]?.trim(),
-                        participantes: cols[2]?.trim(),
-                        horario: cols[3]?.trim(),
-                        punto: cols[4]?.trim()
+                        dia: cols[0] ? cols[0].trim() : "",
+                        tipo: cols[1] ? cols[1].trim().toUpperCase() : "", // Convertimos a Mayúscula y quitamos espacios
+                        participantes: cols[2] ? cols[2].trim() : "Sin asignar",
+                        horario: cols[3] ? cols[3].trim() : "",
+                        punto: cols[4] ? cols[4].trim() : ""
                     };
                 });
                 renderSlots();
@@ -201,7 +164,6 @@
             currentPoint = pointName;
             document.getElementById('currentPointTitle').innerText = pointName;
             document.getElementById('heroImg').style.backgroundImage = `url('${imgUrl}')`;
-            
             document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
             element.classList.add('active');
             renderSlots();
@@ -221,14 +183,24 @@
             const filtered = allData.filter(d => d.dia === currentDay && d.punto === currentPoint);
 
             if(filtered.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para hoy.</p>`;
+                container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
                 return;
             }
 
             filtered.forEach(turno => {
                 const card = document.createElement('div');
-                card.className = `slot slot-${turno.tipo}`;
-                card.innerHTML = `<h4>${turno.participantes}</h4><span class="badge">${turno.horario}</span>`;
+                
+                // Aplicamos la clase según el tipo (M o T)
+                let colorClass = "turno-M"; // Por defecto naranja
+                if (turno.tipo === "T") {
+                    colorClass = "turno-T"; // Azul
+                }
+
+                card.className = `slot ${colorClass}`;
+                card.innerHTML = `
+                    <h4>${turno.participantes}</h4>
+                    <span class="badge">${turno.horario}</span>
+                `;
                 container.appendChild(card);
             });
         }
