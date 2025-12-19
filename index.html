@@ -259,37 +259,60 @@
     }
 
     function renderSlots() {
-      const container = document.getElementById('slotsContainer');
-      container.innerHTML = '';
+  const container = document.getElementById('slotsContainer');
+  container.innerHTML = '';
 
-      const filtered = allData.filter(d =>
-        d.dia.toLowerCase() === currentDay.toLowerCase() &&
-        d.punto === currentPoint
-      );
+  const filtered = allData.filter(d =>
+    d.dia.toLowerCase() === currentDay.toLowerCase() &&
+    d.punto === currentPoint
+  );
 
-      if (filtered.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
-        return;
-      }
+  if (filtered.length === 0) {
+    container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
+    return;
+  }
 
-      // ✅ Mapa de tipos a clases (sin includes, para que TD no caiga en T)
-      const typeToClass = {
-        M: 'turno-M',
-        T: 'turno-T',
-        TD: 'turno-TD'
-      };
+  filtered.forEach(t => {
+    const div = document.createElement('div');
 
-      filtered.forEach(t => {
-        const div = document.createElement('div');
+    // ✅ Limpiamos el tipo lo más posible (incluye espacios raros)
+    const tipoRaw = (t.tipo ?? '').toString();
+    const tipo = tipoRaw
+      .replace(/\u00A0/g, ' ')     // NBSP -> espacio normal
+      .replace(/\s+/g, '')        // quitamos TODOS los espacios
+      .replace(/"/g, '')          // comillas
+      .toUpperCase();
 
-        const tipo = (t.tipo || '').trim().toUpperCase();
-        const clase = typeToClass[tipo] || 'turno-M'; // fallback
+    // ✅ Lógica robusta:
+    // - Si contiene TD (TD, TD1, TDTARDE, T/D -> lo normalizamos abajo)
+    // - Si empieza con T (T, T1, TARDE)
+    // - Si empieza con M (M, M1, MAÑANA)
+    let clase = 'turno-M';
 
-        div.className = `slot ${clase}`;
-        div.innerHTML = `<h4>${t.participantes}</h4><span class="badge">${t.horario}</span>`;
-        container.appendChild(div);
-      });
+    // normalizamos casos tipo "T/D" a "TD"
+    const tipoNorm = tipo.replace('/', '');
+
+    if (tipoNorm.includes('TD')) {
+      clase = 'turno-TD';
+    } else if (tipoNorm.startsWith('T')) {
+      clase = 'turno-T';
+    } else if (tipoNorm.startsWith('M')) {
+      clase = 'turno-M';
     }
+
+    div.className = `slot ${clase}`;
+
+    // 🕵️‍♂️ MODO DETECTIVE: mostramos el tipo que viene del Sheet
+    div.innerHTML = `
+      <h4>${t.participantes}</h4>
+      <span class="badge">${t.horario}</span>
+      <span class="badge" style="margin-left:8px; opacity:.75;">tipo: ${tipoRaw}</span>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
 
     loadData();
   </script>
