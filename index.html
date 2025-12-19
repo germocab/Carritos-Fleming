@@ -30,7 +30,7 @@
             grid-template-columns: 1fr;
             gap: 20px;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             padding: 20px;
         }
 
@@ -38,23 +38,34 @@
             background-color: var(--bg-dark); 
             border-radius: var(--radius); 
             overflow: hidden; 
-            min-height: 750px; 
+            max-height: 850px; 
             display: flex; 
             flex-direction: column; 
         }
 
-        /* --- LADO IZQUIERDO: LOCACIONES --- */
+        /* --- LADO IZQUIERDO: LOCACIONES (CON SCROLL) --- */
+        .scroll-container {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* Personalización de barra de scroll */
+        .scroll-container::-webkit-scrollbar { width: 6px; }
+        .scroll-container::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
         .location-card {
-            padding: 25px;
+            padding: 20px;
             border-radius: var(--radius);
             margin-bottom: 15px;
             cursor: pointer;
             transition: 0.3s;
             border: 2px solid transparent;
+            background-color: #222;
             background-size: cover;
             background-position: center;
             position: relative;
-            min-height: 120px;
+            min-height: 100px;
             display: flex;
             align-items: flex-end;
         }
@@ -62,39 +73,35 @@
         .location-card.active { border-color: var(--primary-orange); }
         .location-card:hover { transform: scale(1.02); }
         
-        .card-label {
-            position: relative;
-            z-index: 2;
-        }
-        
+        .card-label { position: relative; z-index: 2; }
         .overlay {
             position: absolute;
             top:0; left:0; width:100%; height:100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
             border-radius: calc(var(--radius) - 2px);
         }
 
-        /* --- LADO DERECHO: TURNOS --- */
-        .hero-img { height: 180px; background: #333 url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600') center/cover; }
+        /* --- LADO DERECHO: DETALLES --- */
+        .hero-img { height: 160px; background: #333; background-size: cover; transition: 0.5s; }
         
         .days-row { display: flex; justify-content: space-between; margin: 20px 0; }
-        .day-btn { color: var(--text-gray); cursor: pointer; padding: 10px; font-weight: bold; }
+        .day-btn { color: var(--text-gray); cursor: pointer; padding: 10px; font-weight: bold; font-size: 0.9rem; }
         .day-btn.active { 
             background: white; color: var(--primary-orange); 
-            border-radius: 50%; width: 40px; height: 40px; 
+            border-radius: 50%; width: 38px; height: 38px; 
             display: grid; place-items: center; 
         }
 
-        .slot { padding: 20px; border-radius: var(--radius); margin-bottom: 15px; animation: fadeIn 0.4s; }
-        .slot-M { background: var(--primary-orange); } /* Mañana */
-        .slot-T { background: var(--bg-card-blue); }   /* Tarde */
+        .slot { padding: 20px; border-radius: var(--radius); margin-bottom: 12px; animation: fadeIn 0.4s; }
+        .slot-M { background: var(--primary-orange); } 
+        .slot-T { background: var(--bg-card-blue); }   
         
-        .slot h4 { margin: 0 0 10px 0; font-size: 1.1rem; }
-        .badge { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 12px; font-size: 0.85rem; }
+        .slot h4 { margin: 0 0 10px 0; font-size: 1.05rem; }
+        .badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        @media (min-width: 768px) { .app-wrapper { grid-template-columns: 380px 1fr; } }
+        @media (min-width: 768px) { .app-wrapper { grid-template-columns: 350px 1fr; } }
         .p-20 { padding: 20px; }
     </style>
 </head>
@@ -102,36 +109,49 @@
 
     <div class="app-wrapper">
         <section class="screen">
-            <div class="p-20">
-                <h1 style="margin-top:0">Locaciones</h1>
+            <div class="p-20"><h1 style="margin:0">Locaciones</h1></div>
+            <div class="scroll-container">
                 
-                <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this)" style="background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=400')">
+                <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this, 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600')">
                     <div class="overlay"></div>
-                    <div class="card-label">
-                        <h2 style="margin:0">Clínica Cordillera</h2>
-                        <small>📅 Lun a Vie</small>
-                    </div>
+                    <div class="card-label"><h2>Clínica Cordillera</h2><small>Lun a Vie</small></div>
                 </div>
 
-                <div class="location-card" onclick="selectPoint('Supermercado Lider', this)" style="background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400')">
+                <div class="location-card" onclick="selectPoint('Supermercado Lider', this, 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=600')">
                     <div class="overlay"></div>
-                    <div class="card-label">
-                        <h2 style="margin:0">Supermercado Lider</h2>
-                        <small>📅 Lun a Vie</small>
-                    </div>
+                    <div class="card-label"><h2>Supermercado Lider</h2><small>Lun a Vie</small></div>
                 </div>
 
-                <div class="location-card" onclick="selectPoint('Santa Zita', this)" style="background-color: var(--primary-orange);">
-                    <div class="card-label">
-                        <h2 style="margin:0">Santa Zita</h2>
-                        <small>📅 Lun a Vie</small>
-                    </div>
+                <div class="location-card" onclick="selectPoint('Santa Zita', this, 'https://images.unsplash.com/photo-1590073242672-ad953835cc39?q=80&w=600')">
+                    <div class="overlay"></div>
+                    <div class="card-label"><h2>Santa Zita</h2><small>Lun a Vie</small></div>
                 </div>
+
+                <div class="location-card" onclick="selectPoint('Visviri/Santa Isabel', this, 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?q=80&w=600')">
+                    <div class="overlay"></div>
+                    <div class="card-label"><h2>Visviri / Santa Isabel</h2><small>Lun a Vie</small></div>
+                </div>
+
+                <div class="location-card" onclick="selectPoint('Feria Bilbao', this, 'https://images.unsplash.com/photo-1488459711615-228f3979731c?q=80&w=600')">
+                    <div class="overlay"></div>
+                    <div class="card-label"><h2>Feria Bilbao</h2><small>Sábados</small></div>
+                </div>
+
+                <div class="location-card" onclick="selectPoint('Parque Intercomunal', this, 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=600')">
+                    <div class="overlay"></div>
+                    <div class="card-label"><h2>Parque Intercomunal</h2><small>Lun a Vie</small></div>
+                </div>
+
+                <div class="location-card" onclick="selectPoint('Patricia', this, 'https://images.unsplash.com/photo-1516594798947-e65505dbb29d?q=80&w=600')">
+                    <div class="overlay"></div>
+                    <div class="card-label"><h2>Patricia</h2><small>Lun a Vie</small></div>
+                </div>
+
             </div>
         </section>
 
         <section class="screen">
-            <div class="hero-img" id="heroImg"></div>
+            <div class="hero-img" id="heroImg" style="background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600')"></div>
             <div class="p-20">
                 <h2 id="currentPointTitle" style="margin:0">Clínica Cordillera</h2>
                 
@@ -143,15 +163,13 @@
                     <div class="day-btn" onclick="setDay('Viernes', this)">Vie</div>
                 </div>
 
-                <div id="slotsContainer">
-                    </div>
+                <div id="slotsContainer"></div>
             </div>
         </section>
     </div>
 
     <script>
-        // CONFIGURACIÓN
-        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSSVTME1tFKORVdcn5noIwMpgV6v7Ehm1RbodRcEOJfnjdbIEIRT87nYVxc6ySprl3RrZCUzsiYpH64/pub?output=csv'; 
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyaatfpjq6L7eX9ybwPMiMUT0r5aTnKGBGLyr3k6YLRibYZ_Xx_MJ0D__LkErvi7bqauX3QNJ8up8L/pub?output=csv'; 
         
         let allData = [];
         let currentDay = 'Lunes';
@@ -170,24 +188,22 @@
                         tipo: cols[1]?.trim(),
                         participantes: cols[2]?.trim(),
                         horario: cols[3]?.trim(),
-                        punto: cols[4]?.trim() // Columna E
+                        punto: cols[4]?.trim()
                     };
                 });
                 renderSlots();
             } catch (e) {
-                console.error("Error cargando Sheets", e);
-                document.getElementById('slotsContainer').innerHTML = "Error al conectar con Google Sheets.";
+                document.getElementById('slotsContainer').innerHTML = "Error al conectar con los datos.";
             }
         }
 
-        function selectPoint(pointName, element) {
+        function selectPoint(pointName, element, imgUrl) {
             currentPoint = pointName;
             document.getElementById('currentPointTitle').innerText = pointName;
+            document.getElementById('heroImg').style.backgroundImage = `url('${imgUrl}')`;
             
-            // Actualizar UI lateral
             document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
             element.classList.add('active');
-
             renderSlots();
         }
 
@@ -202,21 +218,17 @@
             const container = document.getElementById('slotsContainer');
             container.innerHTML = '';
 
-            // FILTRADO DOBLE: Por Día Y por Punto
             const filtered = allData.filter(d => d.dia === currentDay && d.punto === currentPoint);
 
             if(filtered.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos asignados para este día.</p>`;
+                container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para hoy.</p>`;
                 return;
             }
 
             filtered.forEach(turno => {
                 const card = document.createElement('div');
                 card.className = `slot slot-${turno.tipo}`;
-                card.innerHTML = `
-                    <h4>${turno.participantes}</h4>
-                    <span class="badge">${turno.horario}</span>
-                `;
+                card.innerHTML = `<h4>${turno.participantes}</h4><span class="badge">${turno.horario}</span>`;
                 container.appendChild(card);
             });
         }
