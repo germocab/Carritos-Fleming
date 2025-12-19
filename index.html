@@ -302,12 +302,14 @@ function norm(str) {
         allData = rows.map(row => {
           const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
           return {
-            dia: cols[0] ? cols[0].trim() : "",
-            tipo: cols[1] ? cols[1].trim().replace(/"/g, "").toUpperCase() : "",
-            participantes: cols[2] ? cols[2].trim().replace(/"/g, "") : "",
-            horario: cols[3] ? cols[3].trim().replace(/"/g, "") : "",
-            punto: cols[4] ? cols[4].trim().replace(/"/g, "") : ""
-          };
+  dia: cols[0] ? cols[0].trim() : "",
+  tipo: cols[1] ? cols[1].trim().replace(/"/g, "").toUpperCase() : "",
+  participantes: cols[2] ? cols[2].trim().replace(/"/g, "") : "",
+  horario: cols[3] ? cols[3].trim().replace(/"/g, "") : "",
+  punto: cols[4] ? cols[4].trim().replace(/"/g, "") : "",
+  puntoNorm: norm(cols[4] ? cols[4].trim().replace(/"/g, "") : "")
+};
+
         });
 
         renderSlots();
@@ -352,10 +354,11 @@ function norm(str) {
       const container = document.getElementById('slotsContainer');
       container.innerHTML = '';
 
-      const filtered = allData.filter(d =>
-        d.dia.toLowerCase() === currentDay.toLowerCase() &&
-        d.punto === currentPoint
-      );
+     const filtered = allData.filter(d =>
+  d.dia.toLowerCase() === currentDay.toLowerCase() &&
+  d.puntoNorm === norm(currentPoint)
+);
+
 
       if (filtered.length === 0) {
         container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
