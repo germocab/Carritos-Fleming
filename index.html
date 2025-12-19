@@ -1,209 +1,297 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Turnos Predicación</title>
-    <style>
-        :root {
-            --bg-dark: #121212;
-            --bg-body: #1e1e1e;
-            --bg-card-blue: #2c2c3e;
-            --green: #04c92f;
-            --primary-orange: #f36100;
-            --text-white: #ffffff;
-            --text-gray: #a0a0a0;
-            --radius: 24px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Turnos Predicación</title>
 
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-white); display: flex; justify-content: center; min-height: 100vh; }
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --bg-body: #1e1e1e;
+      --bg-card-blue: #2c2c3e;
+      --green: #04c92f;
+      --primary-orange: #f36100;
+      --text-white: #ffffff;
+      --text-gray: #a0a0a0;
+      --radius: 24px;
+    }
 
-        .app-wrapper {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            width: 100%;
-            max-width: 1100px;
-            padding: 20px;
-        }
+    * { box-sizing: border-box; }
 
-        .screen { background-color: var(--bg-dark); border-radius: var(--radius); overflow: hidden; height: 850px; display: flex; flex-direction: column; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-white);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
 
-        /* --- LOCACIONES (LISTA PRINCIPAL) --- */
-        .scroll-container { padding: 20px; overflow-y: auto; flex-grow: 1; }
-        .location-card {
-            padding: 20px; border-radius: var(--radius); margin-bottom: 15px;
-            cursor: pointer; transition: 0.3s; border: 2px solid transparent;
-            background-color: #222; position: relative; min-height: 100px; display: flex; align-items: flex-end;
-        }
-        .location-card.active { border-color: var(--primary-orange); background-color: #333; }
-        .card-label h2 { margin: 0; font-size: 1.1rem; }
+    .app-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 1100px;
+      padding: 20px;
+    }
 
-        /* --- DETALLES (VISTA SECUNDARIA) --- */
-        .hero-img { height: 160px; background-color: #333; background-size: cover; background-position: center; position: relative; }
-        
-        .back-btn {
-            position: absolute; top: 15px; left: 15px;
-            background: rgba(0,0,0,0.6); border: none; color: white;
-            padding: 8px 15px; border-radius: 20px; cursor: pointer;
-            display: none; /* Se muestra solo en móvil */
-            font-weight: bold; align-items: center; gap: 5px;
-        }
+    .screen {
+      background-color: var(--bg-dark);
+      border-radius: var(--radius);
+      overflow: hidden;
+      height: 850px;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .days-row { display: flex; justify-content: space-between; margin: 20px 0; }
-        .day-btn { color: var(--text-gray); cursor: pointer; padding: 10px; font-weight: bold; }
-        .day-btn.active { background: white; color: var(--primary-orange); border-radius: 50%; width: 38px; height: 38px; display: grid; place-items: center; }
+    /* --- LOCACIONES (LISTA PRINCIPAL) --- */
+    .scroll-container { padding: 20px; overflow-y: auto; flex-grow: 1; }
 
-        /* TURNOS */
-        .slot { padding: 20px; border-radius: var(--radius); margin-bottom: 12px; }
-        .turno-M { background-color: var(--primary-orange) !important; }
-        .turno-T { background-color: var(--bg-card-blue) !important; }
-        .turno-D { background-color: var(--green) !important; }
-        .slot h4 { margin: 0 0 10px 0; font-size: 1.05rem; color: white; }
-        .badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; color: white; }
+    .location-card {
+      padding: 20px;
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+      border: 2px solid transparent;
+      background-color: #222;
+      position: relative;
+      min-height: 100px;
+      display: flex;
+      align-items: flex-end;
+    }
 
-        /* --- LÓGICA RESPONSIVE --- */
-        @media (min-width: 768px) {
-            .app-wrapper { grid-template-columns: 350px 1fr; }
-            #detail-screen { display: flex !important; } /* Siempre visible en PC */
-            .back-btn { display: none !important; }
-        }
+    .location-card.active { border-color: var(--primary-orange); background-color: #333; }
+    .card-label h2 { margin: 0; font-size: 1.1rem; }
 
-        @media (max-width: 767px) {
-            .app-wrapper { padding: 0; }
-            .screen { height: 100vh; border-radius: 0; }
-            #detail-screen { display: none; } /* Oculto por defecto en móvil */
-            .back-btn { display: flex; }
-        }
-        .p-20 { padding: 20px; }
-    </style>
+    /* --- DETALLES (VISTA SECUNDARIA) --- */
+    .hero-img {
+      height: 160px;
+      background-color: #333;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: none; /* Se muestra solo en móvil */
+      font-weight: bold;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .days-row { display: flex; justify-content: space-between; margin: 20px 0; }
+    .day-btn { color: var(--text-gray); cursor: pointer; padding: 10px; font-weight: bold; }
+    .day-btn.active {
+      background: white;
+      color: var(--primary-orange);
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+    }
+
+    /* TURNOS */
+    .slot { padding: 20px; border-radius: var(--radius); margin-bottom: 12px; }
+    .turno-M  { background-color: var(--primary-orange) !important; }
+    .turno-T  { background-color: var(--bg-card-blue) !important; }
+    .turno-TD { background-color: var(--green) !important; }
+
+    .slot h4 { margin: 0 0 10px 0; font-size: 1.05rem; color: white; }
+    .badge {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      color: white;
+    }
+
+    /* --- LÓGICA RESPONSIVE --- */
+    @media (min-width: 768px) {
+      .app-wrapper { grid-template-columns: 350px 1fr; }
+      #detail-screen { display: flex !important; } /* Siempre visible en PC */
+      .back-btn { display: none !important; }
+    }
+
+    @media (max-width: 767px) {
+      .app-wrapper { padding: 0; }
+      .screen { height: 100vh; border-radius: 0; }
+      #detail-screen { display: none; } /* Oculto por defecto en móvil */
+      .back-btn { display: flex; }
+    }
+
+    .p-20 { padding: 20px; }
+  </style>
 </head>
+
 <body>
+  <div class="app-wrapper">
 
-    <div class="app-wrapper">
-        <section class="screen" id="list-screen">
-            <div class="p-20"><h1 style="margin:0">Locaciones</h1></div>
-            <div class="scroll-container">
-                <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this)">
-                    <div class="card-label"><h2>Clínica Cordillera</h2></div>
-                </div>
-                <div class="location-card" onclick="selectPoint('Supermercado Lider', this)">
-                    <div class="card-label"><h2>Supermercado Lider</h2></div>
-                </div>
-                <div class="location-card" onclick="selectPoint('Santa Zita', this)">
-                    <div class="card-label"><h2>Santa Zita</h2></div>
-                </div>
-                <div class="location-card" onclick="selectPoint('Visviri/Supermercado Santa Isabel', this)">
-                    <div class="card-label"><h2>Visviri / Santa Isabel</h2></div>
-                </div>
-                <div class="location-card" onclick="selectPoint('Feria de Francisco Bilbao (Curaco)', this)">
-                    <div class="card-label"><h2>Feria de Francisco Bilbao (Curaco)</h2></div>
-                </div>
-                <div class="location-card" onclick="selectPoint('Parque Intercomunal La Reina (Duqueco)', this)">
-                    <div class="card-label"><h2>Parque Intercomunal</h2></div>
-                </div>
-                <div class="location-card" onclick="selectPoint('Patricia', this)">
-                    <div class="card-label"><h2>Patricia</h2></div>
-                </div>
-            </div>
-        </section>
+    <section class="screen" id="list-screen">
+      <div class="p-20"><h1 style="margin:0">Locaciones</h1></div>
 
-        <section class="screen" id="detail-screen">
-            <div class="hero-img">
-                <button class="back-btn" onclick="goBack()">← Volver</button>
-            </div>
-            <div class="p-20">
-                <h2 id="currentPointTitle" style="margin:0">Clínica Cordillera</h2>
-                <div class="days-row">
-                    <div class="day-btn active" onclick="setDay('Lunes', this)">Lun</div>
-                    <div class="day-btn" onclick="setDay('Martes', this)">Mar</div>
-                    <div class="day-btn" onclick="setDay('Miercoles', this)">Mie</div>
-                    <div class="day-btn" onclick="setDay('Jueves', this)">Jue</div>
-                    <div class="day-btn" onclick="setDay('Viernes', this)">Vie</div>
-                    <div class="day-btn" onclick="setDay('Sabado', this)">Sab</div>
-                    <div class="day-btn" onclick="setDay('Domingo', this)">Dom</div>
-                </div>
-                <div id="slotsContainer">Cargando...</div>
-            </div>
-        </section>
-    </div>
+      <div class="scroll-container">
+        <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this)">
+          <div class="card-label"><h2>Clínica Cordillera</h2></div>
+        </div>
 
-    <script>
-        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSSVTME1tFKORVdcn5noIwMpgV6v7Ehm1RbodRcEOJfnjdbIEIRT87nYVxc6ySprl3RrZCUzsiYpH64/pub?output=csv'; 
-        
-        let allData = [];
-        let currentDay = 'Lunes';
-        let currentPoint = 'Clínica Cordillera';
+        <div class="location-card" onclick="selectPoint('Supermercado Lider', this)">
+          <div class="card-label"><h2>Supermercado Lider</h2></div>
+        </div>
 
-        async function loadData() {
-            try {
-                const response = await fetch(SHEET_URL);
-                const text = await response.text();
-                const rows = text.split(/\r?\n/).filter(row => row.trim() !== "").slice(1);
-                
-                allData = rows.map(row => {
-                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    return {
-                        dia: cols[0] ? cols[0].trim() : "",
-                        tipo: cols[1] ? cols[1].trim().toUpperCase() : "",
-                        participantes: cols[2] ? cols[2].trim().replace(/"/g, "") : "",
-                        horario: cols[3] ? cols[3].trim().replace(/"/g, "") : "",
-                        punto: cols[4] ? cols[4].trim().replace(/"/g, "") : ""
-                    };
-                });
-                renderSlots();
-            } catch (e) {
-                document.getElementById('slotsContainer').innerHTML = "Error de conexión.";
-            }
-        }
+        <div class="location-card" onclick="selectPoint('Santa Zita', this)">
+          <div class="card-label"><h2>Santa Zita</h2></div>
+        </div>
 
-        function selectPoint(name, el) {
-            currentPoint = name;
-            document.getElementById('currentPointTitle').innerText = name;
-            document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            renderSlots();
+        <div class="location-card" onclick="selectPoint('Visviri/Supermercado Santa Isabel', this)">
+          <div class="card-label"><h2>Visviri / Santa Isabel</h2></div>
+        </div>
 
-            // En móvil, cambiar de pantalla
-            if (window.innerWidth < 768) {
-                document.getElementById('list-screen').style.display = 'none';
-                document.getElementById('detail-screen').style.display = 'flex';
-                window.scrollTo(0, 0);
-            }
-        }
+        <div class="location-card" onclick="selectPoint('Feria de Francisco Bilbao (Curaco)', this)">
+          <div class="card-label"><h2>Feria de Francisco Bilbao (Curaco)</h2></div>
+        </div>
 
-        function goBack() {
-            document.getElementById('list-screen').style.display = 'flex';
-            document.getElementById('detail-screen').style.display = 'none';
-        }
+        <div class="location-card" onclick="selectPoint('Parque Intercomunal La Reina (Duqueco)', this)">
+          <div class="card-label"><h2>Parque Intercomunal</h2></div>
+        </div>
 
-        function setDay(day, el) {
-            currentDay = day;
-            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            renderSlots();
-        }
+        <div class="location-card" onclick="selectPoint('Patricia', this)">
+          <div class="card-label"><h2>Patricia</h2></div>
+        </div>
+      </div>
+    </section>
 
-        function renderSlots() {
-            const container = document.getElementById('slotsContainer');
-            container.innerHTML = '';
-            const filtered = allData.filter(d => d.dia.toLowerCase() === currentDay.toLowerCase() && d.punto === currentPoint);
+    <section class="screen" id="detail-screen">
+      <div class="hero-img">
+        <button class="back-btn" onclick="goBack()">← Volver</button>
+      </div>
 
-            if(filtered.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
-                return;
-            }
+      <div class="p-20">
+        <h2 id="currentPointTitle" style="margin:0">Clínica Cordillera</h2>
 
-            filtered.forEach(t => {
-                const div = document.createElement('div');
-                div.className = `slot ${t.tipo.includes('T') ? 'turno-T' : 'turno-M'}`;
-                div.innerHTML = `<h4>${t.participantes}</h4><span class="badge">${t.horario}</span>`;
-                container.appendChild(div);
-            });
-        }
+        <div class="days-row">
+          <div class="day-btn active" onclick="setDay('Lunes', this)">Lun</div>
+          <div class="day-btn" onclick="setDay('Martes', this)">Mar</div>
+          <div class="day-btn" onclick="setDay('Miercoles', this)">Mie</div>
+          <div class="day-btn" onclick="setDay('Jueves', this)">Jue</div>
+          <div class="day-btn" onclick="setDay('Viernes', this)">Vie</div>
+          <div class="day-btn" onclick="setDay('Sabado', this)">Sab</div>
+          <div class="day-btn" onclick="setDay('Domingo', this)">Dom</div>
+        </div>
 
-        loadData();
-    </script>
+        <div id="slotsContainer">Cargando...</div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSSVTME1tFKORVdcn5noIwMpgV6v7Ehm1RbodRcEOJfnjdbIEIRT87nYVxc6ySprl3RrZCUzsiYpH64/pub?output=csv';
+
+    let allData = [];
+    let currentDay = 'Lunes';
+    let currentPoint = 'Clínica Cordillera';
+
+    async function loadData() {
+      try {
+        const response = await fetch(SHEET_URL);
+        const text = await response.text();
+        const rows = text.split(/\r?\n/).filter(row => row.trim() !== "").slice(1);
+
+        allData = rows.map(row => {
+          const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+          return {
+            dia: cols[0] ? cols[0].trim() : "",
+            // 👇 importantísimo: dejamos el tipo ya “limpio”
+            tipo: cols[1] ? cols[1].trim().replace(/"/g, "").toUpperCase() : "",
+            participantes: cols[2] ? cols[2].trim().replace(/"/g, "") : "",
+            horario: cols[3] ? cols[3].trim().replace(/"/g, "") : "",
+            punto: cols[4] ? cols[4].trim().replace(/"/g, "") : ""
+          };
+        });
+
+        renderSlots();
+      } catch (e) {
+        document.getElementById('slotsContainer').innerHTML = "Error de conexión.";
+      }
+    }
+
+    function selectPoint(name, el) {
+      currentPoint = name;
+      document.getElementById('currentPointTitle').innerText = name;
+
+      document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+
+      renderSlots();
+
+      // En móvil, cambiar de pantalla
+      if (window.innerWidth < 768) {
+        document.getElementById('list-screen').style.display = 'none';
+        document.getElementById('detail-screen').style.display = 'flex';
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function goBack() {
+      document.getElementById('list-screen').style.display = 'flex';
+      document.getElementById('detail-screen').style.display = 'none';
+    }
+
+    function setDay(day, el) {
+      currentDay = day;
+      document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      renderSlots();
+    }
+
+    function renderSlots() {
+      const container = document.getElementById('slotsContainer');
+      container.innerHTML = '';
+
+      const filtered = allData.filter(d =>
+        d.dia.toLowerCase() === currentDay.toLowerCase() &&
+        d.punto === currentPoint
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
+        return;
+      }
+
+      // ✅ Mapa de tipos a clases (sin includes, para que TD no caiga en T)
+      const typeToClass = {
+        M: 'turno-M',
+        T: 'turno-T',
+        TD: 'turno-TD'
+      };
+
+      filtered.forEach(t => {
+        const div = document.createElement('div');
+
+        const tipo = (t.tipo || '').trim().toUpperCase();
+        const clase = typeToClass[tipo] || 'turno-M'; // fallback
+
+        div.className = `slot ${clase}`;
+        div.innerHTML = `<h4>${t.participantes}</h4><span class="badge">${t.horario}</span>`;
+        container.appendChild(div);
+      });
+    }
+
+    loadData();
+  </script>
 </body>
 </html>
