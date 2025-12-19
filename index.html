@@ -3,27 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Predicación - Turnos Corregido</title>
+    <title>Sistema de Turnos Predicación</title>
     <style>
         :root {
             --bg-dark: #121212;
             --bg-body: #1e1e1e;
-            --bg-card-blue: #2c2c3e; /* Color Azul para Tarde */
-            --primary-orange: #f36100; /* Color Naranja para Mañana */
+            --bg-card-blue: #2c2c3e;
+            --primary-orange: #f36100;
             --text-white: #ffffff;
             --text-gray: #a0a0a0;
             --radius: 24px;
         }
 
         * { box-sizing: border-box; }
-        body { 
-            margin: 0; 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: var(--bg-body); 
-            color: var(--text-white); 
-            display: flex; 
-            justify-content: center; 
-        }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-white); display: flex; justify-content: center; }
 
         .app-wrapper {
             display: grid;
@@ -34,52 +27,30 @@
             padding: 20px;
         }
 
-        .screen { 
-            background-color: var(--bg-dark); 
-            border-radius: var(--radius); 
-            overflow: hidden; 
-            max-height: 850px; 
-            display: flex; 
-            flex-direction: column; 
-        }
+        .screen { background-color: var(--bg-dark); border-radius: var(--radius); overflow: hidden; height: 850px; display: flex; flex-direction: column; }
 
-        /* --- LADO IZQUIERDO: LOCACIONES --- */
+        /* LADO IZQUIERDO: LOCACIONES */
         .scroll-container { padding: 20px; overflow-y: auto; flex-grow: 1; }
         .location-card {
             padding: 20px; border-radius: var(--radius); margin-bottom: 15px;
             cursor: pointer; transition: 0.3s; border: 2px solid transparent;
-            background-color: #222; background-size: cover; background-position: center;
-            position: relative; min-height: 100px; display: flex; align-items: flex-end;
+            background-color: #222; position: relative; min-height: 100px; display: flex; align-items: flex-end;
         }
-        .location-card.active { border-color: var(--primary-orange); }
-        .overlay {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-            border-radius: calc(var(--radius) - 2px);
-        }
-        .card-label { position: relative; z-index: 2; }
+        .location-card.active { border-color: var(--primary-orange); background-color: #333; }
+        .card-label h2 { margin: 0; font-size: 1.1rem; position: relative; z-index: 2; }
 
-        /* --- LADO DERECHO: TURNOS --- */
-        .hero-img { height: 160px; background-size: cover; transition: 0.5s; background-color: #333; }
+        /* LADO DERECHO: DETALLES */
+        .hero-img { height: 160px; background-color: #333; background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600'); background-size: cover; background-position: center; }
         .days-row { display: flex; justify-content: space-between; margin: 20px 0; }
         .day-btn { color: var(--text-gray); cursor: pointer; padding: 10px; font-weight: bold; }
-        .day-btn.active { 
-            background: white; color: var(--primary-orange); 
-            border-radius: 50%; width: 38px; height: 38px; 
-            display: grid; place-items: center; 
-        }
+        .day-btn.active { background: white; color: var(--primary-orange); border-radius: 50%; width: 38px; height: 38px; display: grid; place-items: center; }
 
-        /* --- CLASES DE COLOR PARA TURNOS --- */
+        /* TURNOS Y COLORES */
         .slot { padding: 20px; border-radius: var(--radius); margin-bottom: 12px; }
-        
-        /* Turno Mañana (M) -> Naranja */
-        .slot.turno-M { background-color: var(--primary-orange) !important; }
-        
-        /* Turno Tarde (T) -> Azul */
-        .slot.turno-T { background-color: var(--bg-card-blue) !important; }
-        
-        .slot h4 { margin: 0 0 10px 0; font-size: 1.05rem; }
-        .badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; }
+        .turno-M { background-color: var(--primary-orange) !important; }
+        .turno-T { background-color: var(--bg-card-blue) !important; }
+        .slot h4 { margin: 0 0 10px 0; font-size: 1.05rem; color: white; }
+        .badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; color: white; }
 
         @media (min-width: 768px) { .app-wrapper { grid-template-columns: 350px 1fr; } }
         .p-20 { padding: 20px; }
@@ -91,32 +62,32 @@
         <section class="screen">
             <div class="p-20"><h1 style="margin:0">Locaciones</h1></div>
             <div class="scroll-container">
-                <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this, 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600')">
-                    <div class="overlay"></div><div class="card-label"><h2>Clínica Cordillera</h2></div>
+                <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this)">
+                    <div class="card-label"><h2>Clínica Cordillera</h2></div>
                 </div>
-                <div class="location-card" onclick="selectPoint('Supermercado Lider', this, 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=600')">
-                    <div class="overlay"></div><div class="card-label"><h2>Supermercado Lider</h2></div>
+                <div class="location-card" onclick="selectPoint('Supermercado Lider', this)">
+                    <div class="card-label"><h2>Supermercado Lider</h2></div>
                 </div>
-                <div class="location-card" onclick="selectPoint('Santa Zita', this, 'https://images.unsplash.com/photo-1590073242672-ad953835cc39?q=80&w=600')">
-                    <div class="overlay"></div><div class="card-label"><h2>Santa Zita</h2></div>
+                <div class="location-card" onclick="selectPoint('Santa Zita', this)">
+                    <div class="card-label"><h2>Santa Zita</h2></div>
                 </div>
-                <div class="location-card" onclick="selectPoint('Visviri/Santa Isabel', this, 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?q=80&w=600')">
-                    <div class="overlay"></div><div class="card-label"><h2>Visviri / Santa Isabel</h2></div>
+                <div class="location-card" onclick="selectPoint('Visviri/Supermercado Santa Isabel', this)">
+                    <div class="card-label"><h2>Visviri / Santa Isabel</h2></div>
                 </div>
-                <div class="location-card" onclick="selectPoint('Feria Bilbao', this, 'https://images.unsplash.com/photo-1488459711615-228f3979731c?q=80&w=600')">
-                    <div class="overlay"></div><div class="card-label"><h2>Feria Bilbao</h2></div>
+                <div class="location-card" onclick="selectPoint('Feria de Francisco Bilbao (Curaco)', this)">
+                    <div class="card-label"><h2>Feria Bilbao (Curaco)</h2></div>
                 </div>
-                <div class="location-card" onclick="selectPoint('Parque Intercomunal', this, 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=600')">
-                    <div class="overlay"></div><div class="card-label"><h2>Parque Intercomunal</h2></div>
+                <div class="location-card" onclick="selectPoint('Parque Intercomunal La Reina (Duqueco)', this)">
+                    <div class="card-label"><h2>Parque Intercomunal</h2></div>
                 </div>
-                <div class="location-card" onclick="selectPoint('Patricia', this, 'https://images.unsplash.com/photo-1516594798947-e65505dbb29d?q=80&w=600')">
-                    <div class="overlay"></div><div class="card-label"><h2>Patricia</h2></div>
+                <div class="location-card" onclick="selectPoint('Patricia', this)">
+                    <div class="card-label"><h2>Patricia</h2></div>
                 </div>
             </div>
         </section>
 
         <section class="screen">
-            <div class="hero-img" id="heroImg" style="background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600')"></div>
+            <div class="hero-img"></div>
             <div class="p-20">
                 <h2 id="currentPointTitle" style="margin:0">Clínica Cordillera</h2>
                 <div class="days-row">
@@ -126,13 +97,13 @@
                     <div class="day-btn" onclick="setDay('Jueves', this)">Jue</div>
                     <div class="day-btn" onclick="setDay('Viernes', this)">Vie</div>
                 </div>
-                <div id="slotsContainer"></div>
+                <div id="slotsContainer">Cargando turnos desde la nube...</div>
             </div>
         </section>
     </div>
 
     <script>
-        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyaatfpjq6L7eX9ybwPMiMUT0r5aTnKGBGLyr3k6YLRibYZ_Xx_MJ0D__LkErvi7bqauX3QNJ8up8L/pub?output=csv'; 
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSSVTME1tFKORVdcn5noIwMpgV6v7Ehm1RbodRcEOJfnjdbIEIRT87nYVxc6ySprl3RrZCUzsiYpH64/pub?output=csv'; 
         
         let allData = [];
         let currentDay = 'Lunes';
@@ -142,37 +113,38 @@
             try {
                 const response = await fetch(SHEET_URL);
                 const text = await response.text();
-                const rows = text.split('\n').slice(1);
+                // Limpieza de filas para evitar errores de lectura
+                const rows = text.split(/\r?\n/).filter(row => row.trim() !== "").slice(1);
                 
                 allData = rows.map(row => {
-                    const cols = row.split(',');
+                    // Regex avanzada para separar por comas ignorando comas dentro de comillas
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     return {
                         dia: cols[0] ? cols[0].trim() : "",
-                        tipo: cols[1] ? cols[1].trim().toUpperCase() : "", // Convertimos a Mayúscula y quitamos espacios
-                        participantes: cols[2] ? cols[2].trim() : "Sin asignar",
-                        horario: cols[3] ? cols[3].trim() : "",
-                        punto: cols[4] ? cols[4].trim() : ""
+                        tipo: cols[1] ? cols[1].trim().toUpperCase() : "",
+                        participantes: cols[2] ? cols[2].trim().replace(/"/g, "") : "",
+                        horario: cols[3] ? cols[3].trim().replace(/"/g, "") : "",
+                        punto: cols[4] ? cols[4].trim().replace(/"/g, "") : ""
                     };
                 });
                 renderSlots();
             } catch (e) {
-                document.getElementById('slotsContainer').innerHTML = "Error al conectar con los datos.";
+                document.getElementById('slotsContainer').innerHTML = "Error al conectar con la base de datos.";
             }
         }
 
-        function selectPoint(pointName, element, imgUrl) {
-            currentPoint = pointName;
-            document.getElementById('currentPointTitle').innerText = pointName;
-            document.getElementById('heroImg').style.backgroundImage = `url('${imgUrl}')`;
+        function selectPoint(name, el) {
+            currentPoint = name;
+            document.getElementById('currentPointTitle').innerText = name;
             document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
-            element.classList.add('active');
+            el.classList.add('active');
             renderSlots();
         }
 
-        function setDay(dayName, element) {
-            currentDay = dayName;
+        function setDay(day, el) {
+            currentDay = day;
             document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-            element.classList.add('active');
+            el.classList.add('active');
             renderSlots();
         }
 
@@ -180,31 +152,31 @@
             const container = document.getElementById('slotsContainer');
             container.innerHTML = '';
 
-            const filtered = allData.filter(d => d.dia === currentDay && d.punto === currentPoint);
+            const filtered = allData.filter(d => 
+                d.dia.toLowerCase() === currentDay.toLowerCase() && 
+                d.punto === currentPoint
+            );
 
             if(filtered.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos para este día.</p>`;
+                container.innerHTML = `<p style="text-align:center; color:gray; margin-top:40px;">No hay turnos registrados en <b>${currentPoint}</b> para el día <b>${currentDay}</b>.</p>`;
                 return;
             }
 
-            filtered.forEach(turno => {
-                const card = document.createElement('div');
+            filtered.forEach(t => {
+                const div = document.createElement('div');
+                // Lógica de color blindada
+                const isTarde = t.tipo.includes('T');
+                div.className = `slot ${isTarde ? 'turno-T' : 'turno-M'}`;
                 
-                // Aplicamos la clase según el tipo (M o T)
-                let colorClass = "turno-M"; // Por defecto naranja
-                if (turno.tipo === "T") {
-                    colorClass = "turno-T"; // Azul
-                }
-
-                card.className = `slot ${colorClass}`;
-                card.innerHTML = `
-                    <h4>${turno.participantes}</h4>
-                    <span class="badge">${turno.horario}</span>
+                div.innerHTML = `
+                    <h4>${t.participantes}</h4>
+                    <span class="badge">${t.horario}</span>
                 `;
-                container.appendChild(card);
+                container.appendChild(div);
             });
         }
 
+        // Carga inicial
         loadData();
     </script>
 </body>
