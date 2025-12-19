@@ -282,6 +282,17 @@
       else hero.style.backgroundImage = 'none';
     }
 
+function norm(str) {
+  return (str ?? "")
+    .toString()
+    .trim()
+    .replace(/\u00A0/g, " ")        // espacios raros
+    .replace(/\s+/g, " ")           // colapsa espacios
+    .replace(/\s*\/\s*/g, "/")      // " / " -> "/"
+    .toLowerCase();
+}
+
+    
     async function loadData() {
       try {
         const response = await fetch(SHEET_URL);
