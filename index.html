@@ -441,6 +441,32 @@ function norm(str) {
     applyImagesToCards();        // pone imagen a las tarjetas del listado
     setHeroImage(currentPoint);  // pone imagen arriba según el punto inicial
     loadData();
+
+function toggleTheme() {
+    const body = document.body;
+    const btn = document.getElementById('themeBtn');
+    
+    body.classList.toggle('light-mode');
+    
+    if (body.classList.contains('light-mode')) {
+        btn.innerHTML = '🌙'; // Icono de luna cuando está en modo claro para volver a oscuro
+        localStorage.setItem('theme', 'light');
+    } else {
+        btn.innerHTML = '☀️'; // Icono de sol cuando está en modo oscuro para volver a claro
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Al cargar la página, verificar si hay una preferencia guardada
+window.onload = function() {
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('themeBtn').innerHTML = '🌙';
+    }
+    // Aquí puedes mantener tu lógica existente de cargar el CSV
+    fetchData(); 
+};
+    
   </script>
 </body>
 </html>
