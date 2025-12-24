@@ -17,6 +17,53 @@
       --radius: 24px;
     }
 
+/* --- MODO CLARO --- */
+body.light-mode {
+  --bg-dark: #ffffff;
+  --bg-body: #f0f2f5;
+  --bg-card-blue: #0056b3; /* Un azul más vibrante para modo claro */
+  --text-white: #1c1e21;
+  --text-gray: #606770;
+  --bg-card-list: #ffffff;
+}
+
+/* --- BOTÓN DE TEMA --- */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: var(--primary-orange);
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.theme-toggle:active {
+  transform: scale(0.9);
+}
+
+/* Ajuste necesario en las tarjetas de la lista para que usen la variable */
+.location-card {
+  background-color: var(--bg-card-list) !important;
+  color: var(--text-white);
+}
+
+/* Ajuste para los botones de día en modo claro */
+body.light-mode .day-btn.active {
+  background: var(--primary-orange);
+  color: white;
+}
+    
     * { box-sizing: border-box; }
 
     body {
