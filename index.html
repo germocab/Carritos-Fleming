@@ -224,6 +224,14 @@ body.light-mode .day-btn.active {
     }
 
     .p-20 { padding: 20px; }
+
+.card-description {
+  margin: 4px 0 0 0;
+  font-size: 0.85rem;
+  color: var(--text-gray); /* Se verá genial sobre el fondo oscuro */
+  line-height: 1.3;
+}
+    
   </style>
 </head>
 
@@ -236,30 +244,37 @@ body.light-mode .day-btn.active {
       <div class="scroll-container">
         <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this)">
           <div class="card-label"><h2>Clínica Cordillera</h2></div>
+          <p class="card-description">Lun a Vie</p>
         </div>
 
         <div class="location-card" onclick="selectPoint('Supermercado Lider', this)">
           <div class="card-label"><h2>Supermercado Lider</h2></div>
+          <p class="card-description">Lun a Vie</p>
         </div>
 
         <div class="location-card" onclick="selectPoint('Santa Zita', this)">
           <div class="card-label"><h2>Santa Zita</h2></div>
+          <p class="card-description">Lun a Vie</p>
         </div>
 
         <div class="location-card" onclick="selectPoint('Visviri/Supermercado Santa Isabel', this)">
           <div class="card-label"><h2>Visviri / Santa Isabel</h2></div>
+          <p class="card-description">Lun a Vie</p>
         </div>
 
         <div class="location-card" onclick="selectPoint('Feria de Francisco Bilbao (Curaco)', this)">
           <div class="card-label"><h2>Feria de Francisco Bilbao (Curaco)</h2></div>
+          <p class="card-description">Sábados</p>
         </div>
 
         <div class="location-card" onclick="selectPoint('Parque Intercomunal', this)">
           <div class="card-label"><h2>Parque Intercomunal</h2></div>
+          <p class="card-description">Domingos</p>
         </div>
 
         <div class="location-card" onclick="selectPoint('Patricia', this)">
           <div class="card-label"><h2>Patricia</h2></div>
+          <p class="card-description">Domingos</p>
         </div>
       </div>
     </section>
