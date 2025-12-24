@@ -132,13 +132,32 @@ body.light-mode .day-btn.active {
 
     .location-card.active { border-color: var(--primary-orange); }
 
-    .card-label {
-      position: relative;
-      z-index: 1;
-    }
+.card-label {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column; /* Esto obliga a que los elementos se apilen uno sobre otro */
+  align-items: flex-start;
+  width: 100%;
+}
 
-    .card-label h2 { margin: 0; font-size: 1.1rem; }
+.card-label h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700; /* Título bien marcado */
+  color: var(--text-white);
+}
 
+.card-description {
+  display: block; /* Asegura que se posicione debajo */
+  margin: 4px 0 0 0;
+  font-size: 0.9rem; /* Un poco más grande para que sea legible */
+  font-weight: 600; /* Semi-bold para que resalte */
+  color: #ffffff; /* Blanco puro para máximo contraste */
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8); /* Sombra extra para que "salte" del fondo */
+  line-height: 1.2;
+}
+    
     /* --- DETALLES (VISTA SECUNDARIA) --- */
     .hero-img {
       height: 160px;
