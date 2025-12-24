@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Turnos en la Predicación Pública con Carritos</title>
+  <title>Sistema de Turnos Predicación</title>
 
   <style>
     :root {
@@ -17,53 +17,6 @@
       --radius: 24px;
     }
 
-/* --- MODO CLARO --- */
-body.light-mode {
-  --bg-dark: #ffffff;
-  --bg-body: #f0f2f5;
-  --bg-card-blue: #0056b3; /* Un azul más vibrante para modo claro */
-  --text-white: #1c1e21;
-  --text-gray: #606770;
-  --bg-card-list: #ffffff;
-}
-
-/* --- BOTÓN DE TEMA --- */
-.theme-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background-color: var(--primary-orange);
-  border: none;
-  color: white;
-  cursor: pointer;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.theme-toggle:active {
-  transform: scale(0.9);
-}
-
-/* Ajuste necesario en las tarjetas de la lista para que usen la variable */
-.location-card {
-  background-color: var(--bg-card-list) !important;
-  color: var(--text-white);
-}
-
-/* Ajuste para los botones de día en modo claro */
-body.light-mode .day-btn.active {
-  background: var(--primary-orange);
-  color: white;
-}
-    
     * { box-sizing: border-box; }
 
     body {
@@ -132,43 +85,13 @@ body.light-mode .day-btn.active {
 
     .location-card.active { border-color: var(--primary-orange); }
 
-/* Limpiamos y reestructuramos el contenedor de los textos */
-.card-label {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  padding: 15px; /* Espacio interno para que el texto no toque los bordes */
-  display: flex;
-  flex-direction: column !important; /* Fuerza el título arriba y descripción abajo */
-  justify-content: flex-end;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%); /* Sombra propia para el texto */
-}
+    .card-label {
+      position: relative;
+      z-index: 1;
+    }
 
-.card-label h2 {
-  margin: 0 !important;
-  padding: 0 !important;
-  font-size: 1.2rem;
-  font-weight: 800; /* Extra negrita */
-  color: #ffffff !important;
-  display: block;
-}
+    .card-label h2 { margin: 0; font-size: 1.1rem; }
 
-.card-description {
-  margin-top: 5px !important; /* Espacio exacto debajo del título */
-  font-size: 0.95rem;
-  font-weight: 600; /* Semi-bold como pediste */
-  color: #ffffff !important; /* Blanco puro */
-  display: block !important; /* Evita que se ponga al lado */
-  opacity: 1;
-  text-shadow: 2px 2px 4px rgba(0,0,0,1); /* Sombra fuerte para legibilidad total */
-}
-
-/* Aseguramos que la tarjeta sea flexible para mostrar el contenido abajo */
-.location-card {
-  display: flex;
-  align-items: flex-end; /* Empuja el card-label al fondo de la tarjeta */
-  padding: 0 !important; /* Dejamos que el padding lo maneje el card-label */
-    
     /* --- DETALLES (VISTA SECUNDARIA) --- */
     .hero-img {
       height: 160px;
@@ -254,14 +177,6 @@ body.light-mode .day-btn.active {
     }
 
     .p-20 { padding: 20px; }
-
-.card-description {
-  margin: 4px 0 0 0;
-  font-size: 0.85rem;
-  color: var(--text-gray); /* Se verá genial sobre el fondo oscuro */
-  line-height: 1.3;
-}
-    
   </style>
 </head>
 
@@ -269,42 +184,35 @@ body.light-mode .day-btn.active {
   <div class="app-wrapper">
 
     <section class="screen" id="list-screen">
-      <div class="p-20"><h1 style="margin:0">Puntos</h1></div>
+      <div class="p-20"><h1 style="margin:0">Locaciones</h1></div>
 
       <div class="scroll-container">
         <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this)">
           <div class="card-label"><h2>Clínica Cordillera</h2></div>
-         <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Supermercado Lider', this)">
           <div class="card-label"><h2>Supermercado Lider</h2></div>
-         <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Santa Zita', this)">
           <div class="card-label"><h2>Santa Zita</h2></div>
-        <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Visviri/Supermercado Santa Isabel', this)">
           <div class="card-label"><h2>Visviri / Santa Isabel</h2></div>
-          <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Feria de Francisco Bilbao (Curaco)', this)">
           <div class="card-label"><h2>Feria de Francisco Bilbao (Curaco)</h2></div>
-         <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Parque Intercomunal', this)">
           <div class="card-label"><h2>Parque Intercomunal</h2></div>
-         <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Patricia', this)">
           <div class="card-label"><h2>Patricia</h2></div>
-          <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
       </div>
     </section>
@@ -484,32 +392,6 @@ function norm(str) {
     applyImagesToCards();        // pone imagen a las tarjetas del listado
     setHeroImage(currentPoint);  // pone imagen arriba según el punto inicial
     loadData();
-
-function toggleTheme() {
-    const body = document.body;
-    const btn = document.getElementById('themeBtn');
-    
-    body.classList.toggle('light-mode');
-    
-    if (body.classList.contains('light-mode')) {
-        btn.innerHTML = '🌙'; // Icono de luna cuando está en modo claro para volver a oscuro
-        localStorage.setItem('theme', 'light');
-    } else {
-        btn.innerHTML = '☀️'; // Icono de sol cuando está en modo oscuro para volver a claro
-        localStorage.setItem('theme', 'dark');
-    }
-}
-
-// Al cargar la página, verificar si hay una preferencia guardada
-window.onload = function() {
-    if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-mode');
-        document.getElementById('themeBtn').innerHTML = '🌙';
-    }
-    // Aquí puedes mantener tu lógica existente de cargar el CSV
-    fetchData(); 
-};
-    
   </script>
 </body>
 </html>
