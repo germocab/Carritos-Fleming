@@ -132,31 +132,42 @@ body.light-mode .day-btn.active {
 
     .location-card.active { border-color: var(--primary-orange); }
 
+/* Limpiamos y reestructuramos el contenedor de los textos */
 .card-label {
   position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column; /* Esto obliga a que los elementos se apilen uno sobre otro */
-  align-items: flex-start;
+  z-index: 2;
   width: 100%;
+  padding: 15px; /* Espacio interno para que el texto no toque los bordes */
+  display: flex;
+  flex-direction: column !important; /* Fuerza el título arriba y descripción abajo */
+  justify-content: flex-end;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%); /* Sombra propia para el texto */
 }
 
 .card-label h2 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 700; /* Título bien marcado */
-  color: var(--text-white);
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 1.2rem;
+  font-weight: 800; /* Extra negrita */
+  color: #ffffff !important;
+  display: block;
 }
 
 .card-description {
-  display: block; /* Asegura que se posicione debajo */
-  margin: 4px 0 0 0;
-  font-size: 0.9rem; /* Un poco más grande para que sea legible */
-  font-weight: 600; /* Semi-bold para que resalte */
-  color: #ffffff; /* Blanco puro para máximo contraste */
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.8); /* Sombra extra para que "salte" del fondo */
-  line-height: 1.2;
+  margin-top: 5px !important; /* Espacio exacto debajo del título */
+  font-size: 0.95rem;
+  font-weight: 600; /* Semi-bold como pediste */
+  color: #ffffff !important; /* Blanco puro */
+  display: block !important; /* Evita que se ponga al lado */
+  opacity: 1;
+  text-shadow: 2px 2px 4px rgba(0,0,0,1); /* Sombra fuerte para legibilidad total */
 }
+
+/* Aseguramos que la tarjeta sea flexible para mostrar el contenido abajo */
+.location-card {
+  display: flex;
+  align-items: flex-end; /* Empuja el card-label al fondo de la tarjeta */
+  padding: 0 !important; /* Dejamos que el padding lo maneje el card-label */
     
     /* --- DETALLES (VISTA SECUNDARIA) --- */
     .hero-img {
@@ -263,37 +274,37 @@ body.light-mode .day-btn.active {
       <div class="scroll-container">
         <div class="location-card active" onclick="selectPoint('Clínica Cordillera', this)">
           <div class="card-label"><h2>Clínica Cordillera</h2></div>
-          <p class="card-description">Lun a Vie</p>
+         <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Supermercado Lider', this)">
           <div class="card-label"><h2>Supermercado Lider</h2></div>
-          <p class="card-description">Lun a Vie</p>
+         <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Santa Zita', this)">
           <div class="card-label"><h2>Santa Zita</h2></div>
-          <p class="card-description">Lun a Vie</p>
+        <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Visviri/Supermercado Santa Isabel', this)">
           <div class="card-label"><h2>Visviri / Santa Isabel</h2></div>
-          <p class="card-description">Lun a Vie</p>
+          <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Feria de Francisco Bilbao (Curaco)', this)">
           <div class="card-label"><h2>Feria de Francisco Bilbao (Curaco)</h2></div>
-          <p class="card-description">Sábados</p>
+         <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Parque Intercomunal', this)">
           <div class="card-label"><h2>Parque Intercomunal</h2></div>
-          <p class="card-description">Domingos</p>
+         <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
 
         <div class="location-card" onclick="selectPoint('Patricia', this)">
           <div class="card-label"><h2>Patricia</h2></div>
-          <p class="card-description">Domingos</p>
+          <span class="card-description">Texto de descripción aquí - Blanco y debajo</span>
         </div>
       </div>
     </section>
