@@ -235,7 +235,6 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--b
       <div class="header-list" style="display:flex; justify-content:space-between; align-items:center; padding:25px 25px 10px;">
         <h1 style="margin:0; font-size: 2.2rem;">Inicio</h1>
         <div style="display:flex; gap:12px;">
-          <button class="header-btn" onclick="toggleChangelog()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></button>
           <button class="header-btn" onclick="toggleTheme()"><svg id="themeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 A7 7 0 0 0 21 12.79z"/></svg></button>
 <button class="header-btn" onclick="openLogoutModal()" title="Cerrar Sesión">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -281,10 +280,6 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--b
     <div id="turnActionBar" style="padding:20px;"></div>
   </div>
 
-  <div id="changelogPanel" style="position: fixed; top: 0; right: -100%; width: 100%; max-width: 350px; height: 100%; background: var(--bg-screen); z-index: 3000; transition: 0.4s; padding: 30px 25px; border-left: 1px solid var(--border-color); overflow-y: auto;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;"><h2 style="margin:0;">Novedades</h2><button onclick="toggleChangelog()" style="background:none; border:none; font-size: 2rem; cursor:pointer; color:var(--text-main);">✕</button></div>
-    <div id="changelogContent"></div>
-  </div>
 
   <script>
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT22dGTCsHGc5Qj4EbMxn4XqPoPuUI93UblvVlwu0nPm4FOUzMvLCIv5eTCgjQXS3MiNamBMsBdJ45A/pub?output=csv';
@@ -376,7 +371,7 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--b
     function selectPoint(name) {
       currentPoint = name; const p = POINT_DATA[name];
       document.getElementById('currentPointTitle').innerText = name;
-      document.getElementById('logisticsInfo').innerHTML = `<div class="logistics-box orange"><h4>📍 Punto de Guardado del Carrito</h4><p>${p.guardado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.guardado.tel}" class="btn-mini">📞 Llamar</a><a href="http://maps.google.com/?q=${encodeURIComponent(p.guardado.nombre)}" target="_blank" class="btn-mini">🗺️ Mapa</a></div></div><div class="logistics-box"><h4>👤 Encargado</h4><p>${p.encargado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.encargado.tel}" class="btn-mini">📞 Llamar</a></div></div>`;
+      document.getElementById('logisticsInfo').innerHTML = `<div class="logistics-box orange"><h4>📍 Retiro</h4><p>${p.guardado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.guardado.tel}" class="btn-mini">📞 Llamar</a><a href="http://maps.google.com/?q=${encodeURIComponent(p.guardado.nombre)}" target="_blank" class="btn-mini">🗺️ Mapa</a></div></div><div class="logistics-box"><h4>👤 Encargado</h4><p>${p.encargado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.encargado.tel}" class="btn-mini">📞 Llamar</a></div></div>`;
       const dRow = document.getElementById('daysRow'); dRow.innerHTML = ''; currentDay = p.days[0];
       p.days.forEach(d => {
         const b = document.createElement('div'); b.className = `filter-chip ${d === currentDay ? 'active' : ''}`; b.innerText = d.substring(0,3);
