@@ -376,7 +376,7 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--b
     function selectPoint(name) {
       currentPoint = name; const p = POINT_DATA[name];
       document.getElementById('currentPointTitle').innerText = name;
-      document.getElementById('logisticsInfo').innerHTML = `<div class="logistics-box orange"><h4>📍 Retiro</h4><p>${p.guardado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.guardado.tel}" class="btn-mini">📞 Llamar</a><a href="http://maps.google.com/?q=${encodeURIComponent(p.guardado.nombre)}" target="_blank" class="btn-mini">🗺️ Mapa</a></div></div><div class="logistics-box"><h4>👤 Encargado</h4><p>${p.encargado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.encargado.tel}" class="btn-mini">📞 Llamar</a></div></div>`;
+      document.getElementById('logisticsInfo').innerHTML = `<div class="logistics-box orange"><h4>📍 Punto de Guardado del Carrito</h4><p>${p.guardado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.guardado.tel}" class="btn-mini">📞 Llamar</a><a href="http://maps.google.com/?q=${encodeURIComponent(p.guardado.nombre)}" target="_blank" class="btn-mini">🗺️ Mapa</a></div></div><div class="logistics-box"><h4>👤 Encargado</h4><p>${p.encargado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.encargado.tel}" class="btn-mini">📞 Llamar</a></div></div>`;
       const dRow = document.getElementById('daysRow'); dRow.innerHTML = ''; currentDay = p.days[0];
       p.days.forEach(d => {
         const b = document.createElement('div'); b.className = `filter-chip ${d === currentDay ? 'active' : ''}`; b.innerText = d.substring(0,3);
