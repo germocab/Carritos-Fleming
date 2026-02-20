@@ -264,7 +264,15 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--b
     </section>
 
     <section class="screen" id="detail-screen">
-      <div style="padding: 20px 20px 0;"><button onclick="goBack()" style="background:var(--bg-card); border:1px solid var(--border-color); width:50px; height:50px; border-radius:50%; cursor:pointer; color:var(--text-main); font-size:1.4rem; display:flex; align-items:center; justify-content:center;">❮</button></div>
+      <div style="padding: 20px 20px 0;">
+        <button onclick="goBack()" class="header-btn">
+  <svg width="22" height="22" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>
+</button>
+      </div>
       <div class="scroll-container" id="detailScrollBody">
         <h1 id="currentPointTitle" style="margin-top:10px; font-size: 1.8rem;">Punto</h1>
         <div id="logisticsInfo"></div>
@@ -480,3 +488,4 @@ function confirmLogout() {
   </script>
 </body>
 </html>
+
