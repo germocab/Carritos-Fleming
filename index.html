@@ -5,317 +5,1244 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inicio</title>
   <style>
-/* --- ESTILOS ORIGINALES PRESERVADOS --- */
-body {
-  transition: background-color 0.35s ease, color 0.35s ease;
-}
-
-.screen, .logistics-box, .location-card, .filter-chip, .header-btn {
-  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
-}
-
-.screen { transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease; }
-#detail-screen { opacity: 0; }
-#detail-screen.active { opacity: 1; }
-
-#filterMenu {
-  max-height: 0; opacity: 0; overflow: hidden; transform: translateY(-6px);
-  transition: max-height 0.35s ease, opacity 0.25s ease, transform 0.35s ease;
-}
-#filterMenu.open { max-height: 300px; opacity: 1; transform: translateY(0); }
-
+/* ===================================================
+   DESIGN TOKENS
+   =================================================== */
 :root {
-  --bg-body: #f0f2f5; --bg-screen: #ffffff; --bg-card: #f8f9fa;
-  --text-main: #1a1a1a; --text-gray: #65676b; --primary-orange: #f36100;
-  --primary-blue: #0056ff; --primary-green: #28a745; --radius: 24px;
-  --border-color: #e4e6eb; --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  --bg-body: #eef0f4;
+  --bg-screen: #ffffff;
+  --bg-card: #f5f6f8;
+  --bg-card-hover: #eff0f3;
+  --text-main: #111418;
+  --text-gray: #6b7280;
+  --text-light: #9ca3af;
+  --primary-orange: #f36100;
+  --primary-orange-light: rgba(243,97,0,0.10);
+  --primary-orange-mid: rgba(243,97,0,0.18);
+  --primary-blue: #0056ff;
+  --primary-green: #16a34a;
+  --danger: #dc2626;
+  --radius: 22px;
+  --radius-sm: 14px;
+  --radius-xs: 10px;
+  --border-color: #e2e5ea;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
+  --transition-fast: 0.15s ease;
+  --transition: 0.25s ease;
+  --transition-slow: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 body.dark-mode {
-  --bg-body: #1e1e1e; --bg-screen: #121212; --bg-card: #1e1e1e;
-  --text-main: #ffffff; --text-gray: #a0a0a0; --border-color: rgba(255,255,255,0.05);
+  --bg-body: #111318;
+  --bg-screen: #1c1f26;
+  --bg-card: #242830;
+  --bg-card-hover: #2c3040;
+  --text-main: #f0f1f3;
+  --text-gray: #9ca3af;
+  --text-light: #6b7280;
+  --border-color: rgba(255,255,255,0.07);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow: 0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg: 0 10px 32px rgba(0,0,0,0.45);
 }
 
-* { box-sizing: border-box; }
-body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; }
+/* ===================================================
+   BASE
+   =================================================== */
+*, *::before, *::after { box-sizing: border-box; }
 
-.app-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 1100px; padding: 20px; margin: auto; }
-.screen { background-color: var(--bg-screen); border-radius: var(--radius); overflow: hidden; height: 850px; display: flex; flex-direction: column; box-shadow: var(--shadow); border: 1px solid var(--border-color); position: relative; }
-.scroll-container { padding: 20px; overflow-y: auto; flex-grow: 1; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
+/* ===================================================
+   LAYOUT
+   =================================================== */
+.app-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 1100px;
+  padding: 24px;
+  margin: auto;
+}
+
+.screen {
+  background-color: var(--bg-screen);
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 860px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scroll-container {
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+  scroll-behavior: smooth;
+  /* Smooth scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+.scroll-container::-webkit-scrollbar { width: 5px; }
+.scroll-container::-webkit-scrollbar-track { background: transparent; }
+.scroll-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 99px; }
+
+/* ===================================================
+   SCREEN TRANSITIONS
+   =================================================== */
+.screen { transition: transform var(--transition-slow), opacity var(--transition); }
+#detail-screen { opacity: 0; }
+#detail-screen.active { opacity: 1; }
+
+/* ===================================================
+   HEADER BUTTON
+   =================================================== */
 .header-btn {
-  background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main);
-  width: 48px; height: 48px; border-radius: 50%; cursor: pointer; display: flex;
-  align-items: center; justify-content: center; font-size: 1.2rem; position: relative; transition: transform 0.2s;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.header-btn:hover { background: var(--bg-card-hover); box-shadow: var(--shadow-sm); }
+.header-btn:active { transform: scale(0.93); }
+
+/* ===================================================
+   SEARCH & FILTER
+   =================================================== */
+.search-wrapper {
+  padding: 0 20px 12px;
+}
+.search-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-inner input {
+  width: 100%;
+  padding: 13px 50px 13px 18px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  outline: none;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.search-inner input:focus {
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 3px var(--primary-orange-light);
+}
+.search-inner input::placeholder { color: var(--text-light); }
+.search-filter-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-gray);
+  padding: 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  transition: color var(--transition-fast);
+}
+.search-filter-btn:hover { color: var(--primary-orange); }
+
+#filterMenu {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(-6px);
+  transition: max-height 0.35s ease, opacity 0.25s ease, transform 0.3s ease;
+}
+#filterMenu.open { max-height: 300px; opacity: 1; transform: translateY(0); }
+
+.filter-panel {
+  margin-top: 10px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
 }
 
-.grid-2x2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; align-items: stretch; }
-.location-card { 
-  padding: 20px 10px; border-radius: var(--radius); cursor: pointer; background-color: var(--bg-card); 
-  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; 
-  gap: 12px; border: 2px solid transparent; min-height: 190px; height: 100%; 
+/* ===================================================
+   FILTER CHIPS
+   =================================================== */
+.filter-chip {
+  padding: 8px 16px;
+  border-radius: 99px;
+  background: var(--bg-screen);
+  border: 1.5px solid var(--border-color);
+  font-size: 0.83rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text-gray);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
 }
-.status-dot { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; }
-.location-card h2 { margin: 0; font-size: 0.95rem; font-weight: 800; line-height: 1.2; }
+.filter-chip:hover { border-color: var(--primary-orange); color: var(--primary-orange); }
+.filter-chip.active {
+  background: var(--primary-orange);
+  color: white;
+  border-color: var(--primary-orange);
+  box-shadow: 0 2px 8px rgba(243,97,0,0.28);
+}
 
-.logistics-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 18px; padding: 15px; margin-bottom: 15px; }
-.logistics-box.orange { background: rgba(243, 97, 0, 0.05); border-color: rgba(243, 97, 0, 0.2); }
+/* ===================================================
+   LOCATION GRID
+   =================================================== */
+.grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
 
-.filter-chip { padding: 8px 15px; border-radius: 20px; background: var(--bg-screen); border: 1px solid var(--border-color); font-size: 0.85rem; cursor: pointer; font-weight: 600; color: var(--text-gray); }
-.filter-chip.active { background: var(--primary-orange); color: white; border-color: var(--primary-orange); }
+.location-card {
+  padding: 14px;
+  border-radius: 25px;
+  cursor: pointer;
+  background-color: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+  border: 2px solid transparent;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  overflow: hidden;
+  transition: transform var(--transition), background-color var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+.location-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  background-color: var(--bg-card-hover);
+}
+.location-card:active { transform: scale(0.97); }
 
-.slot { padding: 20px; border-radius: var(--radius); margin-bottom: 12px; color: white; display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: transform 0.2s; }
-.turno-M { background-color: var(--primary-orange); }
-.turno-T { background-color: var(--primary-blue); }
-.turno-TD { background-color: var(--primary-green); }
+.status-dot {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+}
 
-/* --- AJUSTES SOLICITADOS --- */
+.location-card h2 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--text-main);
+}
+
+/* ===================================================
+   SECTION TITLE
+   =================================================== */
+.section-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-gray);
+  margin: 18px 0 10px 2px;
+}
+
+/* ===================================================
+   MY SHIFT CARD
+   =================================================== */
+.my-shift-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+.my-shift-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.my-shift-card:active { transform: scale(0.98); }
+
+/* ===================================================
+   LOGISTICS BOXES
+   =================================================== */
+.logistics-box {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.logistics-box.orange {
+  background: var(--primary-orange-light);
+  border-color: var(--primary-orange-mid);
+}
+
+.logistics-box h4 {
+  margin: 0 0 6px 0;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-gray);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logistics-box p {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+/* ===================================================
+   MINI BUTTONS (call/map/whatsapp inside logistics)
+   =================================================== */
+.btn-mini {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border-radius: var(--radius-xs);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-screen);
+  color: var(--text-main);
+}
+.btn-mini:hover { background: var(--bg-card-hover); box-shadow: var(--shadow-sm); }
+.btn-mini:active { transform: scale(0.95); }
+
+.logistics-box.orange .btn-mini {
+  border-color: var(--primary-orange-mid);
+  color: var(--primary-orange);
+  background: rgba(255,255,255,0.7);
+}
+body.dark-mode .logistics-box.orange .btn-mini {
+  background: rgba(243,97,0,0.1);
+}
+
+.btn-whatsapp {
+  background: #25D366 !important;
+  color: white !important;
+  border-color: #25D366 !important;
+  box-shadow: 0 2px 8px rgba(37,211,102,0.28) !important;
+}
+.btn-whatsapp:hover { opacity: 0.92; }
+
+/* ===================================================
+   SHIFT SLOTS
+   =================================================== */
+.slot {
+  padding: 18px 20px;
+  border-radius: 25px;
+  margin-bottom: 10px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+}
+.slot:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.2); }
+.slot:active { transform: scale(0.98); }
+
+.turno-M  { background: linear-gradient(135deg, #f36100, #ff8533); box-shadow: 0 3px 10px rgba(243,97,0,0.3); }
+.turno-T  { background: linear-gradient(135deg, #0056ff, #3377ff); box-shadow: 0 3px 10px rgba(0,86,255,0.25); }
+.turno-TD { background: linear-gradient(135deg, #16a34a, #22c55e); box-shadow: 0 3px 10px rgba(22,163,74,0.25); }
+.turno-RESERVADO { background: linear-gradient(135deg, #e08600, #f5a623); box-shadow: 0 3px 10px rgba(224,134,0,0.28); }
+
+.slot-pill {
+  background: rgba(255,255,255,0.22);
+  padding: 5px 13px;
+  border-radius: 99px;
+  width: fit-content;
+  font-size: 0.85rem;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+}
+
+/* ===================================================
+   DAYS ROW
+   =================================================== */
+.days-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.days-row::-webkit-scrollbar { display: none; }
+
+/* ===================================================
+   TURN DETAIL SCREEN
+   =================================================== */
+.turn-detail-screen {
+  position: fixed;
+  top: 0; left: 100%;
+  width: 100%; height: 100%;
+  background: var(--bg-screen);
+  z-index: 4000;
+  transition: left 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===================================================
+   NAME OVERLAY
+   =================================================== */
 #nameOverlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
-    z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 #nameModal {
-    background: var(--bg-screen); padding: 30px; border-radius: 28px;
-    width: 100%; max-width: 400px; text-align: center;
+  background: var(--bg-screen);
+  padding: 36px 32px;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+}
+#nameModal h2 { margin: 0 0 8px; font-size: 1.6rem; }
+#nameModal p { color: var(--text-gray); margin: 0 0 24px; font-size: 0.95rem; }
+
+.name-input {
+  width: 100%;
+  padding: 15px 18px;
+  border-radius: 15px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  outline: none;
+  font-size: 1rem;
+  margin-bottom: 14px;
+  font-family: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.name-input:focus {
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 3px var(--primary-orange-light);
+}
+.name-input::placeholder { color: var(--text-light); }
+
+.btn-primary-full {
+  width: 100%;
+  padding: 15px;
+  border-radius: 15px;
+  border: none;
+  background: var(--primary-orange);
+  color: white;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+  box-shadow: 0 3px 12px rgba(243,97,0,0.3);
+}
+.btn-primary-full:hover { filter: brightness(1.06); box-shadow: 0 5px 16px rgba(243,97,0,0.38); }
+.btn-primary-full:active { transform: scale(0.97); }
+
+/* ===================================================
+   LOGOUT OVERLAY
+   =================================================== */
+.logout-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.logout-modal {
+  background: var(--bg-screen);
+  padding: 32px 28px;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+}
+.logout-icon {
+  background: var(--primary-orange-light);
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  color: var(--primary-orange);
+}
+.logout-modal h2 { margin: 0 0 8px; font-size: 1.3rem; }
+.logout-modal p { color: var(--text-gray); margin: 0 0 24px; font-size: 0.9rem; line-height: 1.5; }
+.btn-row { display: flex; gap: 10px; }
+.btn-secondary { flex: 1; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: background-color var(--transition-fast); }
+.btn-secondary:hover { background: var(--bg-card-hover); }
+.btn-danger-ghost { flex: 1; padding: 14px; border-radius: 14px; border: none; background: var(--primary-orange); color: white; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: filter var(--transition-fast); box-shadow: 0 2px 8px rgba(243,97,0,0.25); }
+.btn-danger-ghost:hover { filter: brightness(1.07); }
+
+/* ===================================================
+   HEADER MENU (3 dots)
+   =================================================== */
+.header-menu {
+  position: absolute;
+  top: 54px;
+  right: 0;
+  background: var(--bg-screen);
+  border: 1.5px solid var(--border-color);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  min-width: 215px;
+  z-index: 5000;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.header-menu.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.header-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  transition: background-color var(--transition-fast);
+}
+.header-menu-item:hover { background: var(--bg-card); }
+.header-menu-item:active { background: var(--bg-card-hover); }
+.header-menu-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  flex-shrink: 0;
+  color: var(--text-gray);
+}
+.header-menu-item.danger { color: var(--danger); }
+.header-menu-item.danger .header-menu-icon { color: var(--danger); }
+.header-menu-item:focus-visible {
+  outline: 2px solid var(--primary-orange);
+  outline-offset: -2px;
+}
+.header-menu-section-label {
+  padding: 8px 13px 4px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+.header-menu-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 6px 4px;
+}
+.header-menu-check {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  color: var(--primary-orange);
+  flex-shrink: 0;
+}
+.header-menu-item.active .header-menu-check { display: flex; }
+.header-menu-item.active { color: var(--primary-orange); }
+.header-menu-item.active .header-menu-icon { color: var(--primary-orange); }
+
+/* ===================================================
+   TOAST
+   =================================================== */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: #1a1c21;
+  color: white;
+  padding: 13px 22px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  z-index: 9900;
+  opacity: 0;
+  pointer-events: none;
+  max-width: 88%;
+  text-align: center;
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ===================================================
+   ADMIN OVERLAY / MODAL
+   =================================================== */
+.admin-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.admin-modal {
+  background: var(--bg-screen);
+  padding: 32px 28px;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+}
+.admin-modal h2 { margin: 0 0 8px; }
+.admin-modal p { color: var(--text-gray); font-size: 0.9rem; margin: 0 0 20px; }
+
+.admin-input {
+  width: 100%;
+  padding: 15px 18px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  outline: none;
+  font-size: 1rem;
+  margin-bottom: 14px;
+  font-family: inherit;
+  text-align: left;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.admin-input:focus {
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 3px var(--primary-orange-light);
 }
 
-.section-title { 
-    font-size: 1.1rem; 
-    font-weight: 800; 
-    margin: 10px 0 10px 5px; /* Reducido el margen superior */
-    color: var(--text-main); 
+.admin-btn-primary {
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  border: none;
+  background: var(--primary-orange);
+  color: white;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(243,97,0,0.3);
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+.admin-btn-primary:hover { filter: brightness(1.06); }
+.admin-btn-primary:active { transform: scale(0.97); }
+
+.admin-btn-secondary {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color var(--transition-fast);
+}
+.admin-btn-secondary:hover { background: var(--bg-card-hover); }
+
+.admin-error {
+  color: var(--danger);
+  font-size: 0.83rem;
+  font-weight: 700;
+  margin: -6px 0 12px;
+  min-height: 1.1em;
+  text-align: left;
 }
 
-/* Tarjeta de Mis Turnos Optimizada */
-.my-shift-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 16px;
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    cursor: pointer;
+/* ===================================================
+   ADMIN PANEL
+   =================================================== */
+#adminPanel {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--bg-body);
+  z-index: 6000;
+  display: none;
+  flex-direction: column;
+}
+.admin-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 20px 10px;
+}
+.admin-panel-header h1 { margin: 0; font-size: 1.5rem; }
+
+.admin-tabs {
+  display: flex;
+  gap: 7px;
+  padding: 0 20px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.admin-tabs::-webkit-scrollbar { display: none; }
+
+.admin-tab {
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  color: var(--text-gray);
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.admin-tab:focus-visible { outline: 2px solid var(--primary-orange); outline-offset: 1px; }
+.tab-icon { display: inline-flex; align-items: center; }
+.admin-tab:hover { border-color: var(--primary-orange); color: var(--primary-orange); }
+.admin-tab.active {
+  background: var(--primary-orange);
+  color: white;
+  border-color: var(--primary-orange);
+  box-shadow: 0 2px 8px rgba(243,97,0,0.3);
 }
 
+.admin-list-item {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: background-color var(--transition-fast);
+}
+
+.admin-list-item .info { flex: 1; min-width: 0; }
+.admin-list-item .info .title { font-weight: 800; font-size: 0.97rem; }
+.admin-list-item .info .sub { color: var(--text-gray); font-size: 0.78rem; margin-top: 3px; }
+.admin-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.icon-btn {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-screen);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-family: inherit;
+  padding: 0;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+.icon-btn:hover { background: var(--bg-card-hover); }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn:focus-visible { outline: 2px solid var(--primary-orange); outline-offset: 1px; }
+.icon-btn.danger { color: var(--danger); border-color: rgba(220,38,38,0.25); background: rgba(220,38,38,0.04); }
+
+.fab-add {
+  position: sticky;
+  bottom: 16px;
+  margin: 14px 0 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--primary-orange);
+  color: white;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  width: 100%;
+  box-shadow: 0 4px 14px rgba(243,97,0,0.35);
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+.fab-add:hover { filter: brightness(1.06); }
+.fab-add:active { transform: scale(0.97); }
+
+/* ===================================================
+   FORM OVERLAY / SHEET
+   =================================================== */
+.form-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 7000;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+@media (min-width: 768px) { .form-overlay { align-items: center; } }
+
+.form-sheet {
+  background: var(--bg-screen);
+  width: 100%;
+  max-width: 500px;
+  border-radius: 24px 24px 0 0;
+  padding: 28px 24px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+@media (min-width: 768px) { .form-sheet { border-radius: 24px; } }
+
+.form-group { margin-bottom: 16px; text-align: left; }
+.form-group label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-gray);
+  margin-bottom: 7px;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 13px 15px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 3px var(--primary-orange-light);
+}
+.form-row { display: flex; gap: 10px; }
+.form-row .form-group { flex: 1; }
+.chip-multi { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-multi .filter-chip { margin: 0; }
+.form-actions { display: flex; gap: 10px; margin-top: 22px; }
+
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-gray);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ===================================================
+   RESPONSIVE
+   =================================================== */
 @media (max-width: 767px) {
   .app-wrapper { display: block; padding: 0; }
-  .screen { height: 100vh; border-radius: 0; border: none; width: 100%; }
+  .screen { height: 100dvh; border-radius: 0; border: none; width: 100%; }
   #detail-screen { position: fixed; top: 0; left: 100%; width: 100%; z-index: 2000; }
   #detail-screen.active { transform: translateX(-100%); }
 }
 
 @media (min-width: 768px) {
-  .app-wrapper { display: grid; grid-template-columns: 420px 1fr; gap: 20px; }
+  .app-wrapper { display: grid; grid-template-columns: 400px 1fr; gap: 20px; }
   #detail-screen { position: relative; opacity: 1 !important; transform: none !important; left: auto !important; }
 }
 
 #locationsList {
-    flex: 1; /* Ocupa todo el espacio sobrante */
-    padding-bottom: 20px; /* Margen final para que no se pegue al borde */
-    display: block;         /* Asegura comportamiento de bloque */
+  flex: 1;
+  padding-bottom: 24px;
+  display: block;
 }
 
-@media (max-width: 767px) {
-    .screen { 
-        height: 100vh;      /* Ocupa toda la pantalla del cel */
-        border-radius: 0; 
-    }
-}
-
-/* --- MEJORA DE TARJETAS Y BOTONES --- */
-.logistics-box {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 18px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-/* Variante naranja para Retiro */
-.logistics-box.orange {
-    background: linear-gradient(145deg, rgba(243, 97, 0, 0.08), rgba(243, 97, 0, 0.02));
-    border-color: rgba(243, 97, 0, 0.15);
-}
-
-.logistics-box h4 {
-    margin: 0 0 8px 0;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-gray);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.logistics-box p {
-    margin: 0;
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--text-main);
-}
-
-/* Botones dentro de las tarjetas */
-.btn-mini {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border-radius: 12px;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 700;
-    transition: all 0.2s ease;
-    border: 1px solid var(--border-color);
-    background: var(--bg-screen);
-    color: var(--text-main);
-}
-
-.btn-mini:active {
-    transform: scale(0.96);
-}
-
-/* Color específico para botones de acción directa */
-.logistics-box.orange .btn-mini {
-    border-color: rgba(243, 97, 0, 0.2);
-    color: var(--primary-orange);
-}
-
-/* Estilo para el botón de WhatsApp en encargado */
-.btn-whatsapp {
-    background: #25D366 !important;
-    color: white !important;
-    border: none !important;
+/* ===================================================
+   REDUCED MOTION
+   =================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
 
   </style>
 </head>
 <body>
+  <script>
+    // Aplica el modo de tema (claro / oscuro / automático) ANTES de pintar
+    // el resto de la página, para evitar el parpadeo (flash) de tema.
+    (function () {
+      try {
+        var modo = localStorage.getItem('themeMode') || 'auto';
+        var prefiereOscuro = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var aplicarOscuro = modo === 'dark' || (modo === 'auto' && prefiereOscuro);
+        document.body.classList.toggle('dark-mode', aplicarOscuro);
+      } catch (err) { /* localStorage no disponible: se usa el tema claro por defecto */ }
+    })();
+  </script>
 
-  <div id="nameOverlay">
+  <div id="nameOverlay" role="dialog" aria-modal="true" aria-labelledby="nameOverlayTitle">
     <div id="nameModal">
-        <h2 style="margin-top:0;">Bienvenido</h2>
-        <p style="color:var(--text-gray); margin-bottom:25px;">Introduce tu nombre para acceder.</p>
-        <input type="text" id="userNameInput" placeholder="Escribe tu nombre..." 
-               style="width:100%; padding:16px; border-radius:15px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text-main); outline:none; font-size:1rem; margin-bottom:15px;">
-        <button onclick="saveName()" 
-                style="width:100%; padding:16px; border-radius:15px; border:none; background:var(--primary-orange); color:white; font-weight:bold; font-size:1rem; cursor:pointer;">
-            Comenzar
-        </button>
+        <h2 id="nameOverlayTitle">Bienvenido</h2>
+        <p>Introduce tu nombre para acceder.</p>
+        <input type="text" id="userNameInput" class="name-input" placeholder="Escribe tu nombre…" aria-label="Tu nombre">
+        <button onclick="saveName()" class="btn-primary-full">Comenzar</button>
     </div>
   </div>
 
-<div id="logoutOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px;">
-  <div style="background: var(--bg-screen); padding: 30px; border-radius: 28px; width: 100%; max-width: 350px; text-align: center; box-shadow: var(--shadow);">
-      <div style="background: rgba(243, 97, 0, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--primary-orange);">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+<div id="logoutOverlay" class="logout-overlay" role="dialog" aria-modal="true" aria-labelledby="logoutOverlayTitle">
+  <div class="logout-modal">
+      <div class="logout-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </div>
-      <h2 style="margin-top:0; font-size: 1.4rem;">¿Cerrar sesión?</h2>
-      <p style="color:var(--text-gray); margin-bottom:25px; font-size: 0.95rem;">Tendrás que ingresar tu nombre nuevamente para entrar.</p>
-      
-      <div style="display:flex; gap:12px;">
-        <button onclick="closeLogoutModal()" style="flex:1; padding:14px; border-radius:15px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text-main); font-weight:bold; cursor:pointer;">
-            Cancelar
-        </button>
-        <button onclick="confirmLogout()" style="flex:1; padding:14px; border-radius:15px; border:none; background:var(--primary-orange); color:white; font-weight:bold; cursor:pointer;">
-            Sí, salir
-        </button>
+      <h2 id="logoutOverlayTitle">¿Cerrar sesión?</h2>
+      <p>Tendrás que ingresar tu nombre nuevamente para entrar.</p>
+      <div class="btn-row">
+        <button onclick="closeLogoutModal()" class="btn-secondary">Cancelar</button>
+        <button onclick="confirmLogout()" class="btn-danger-ghost">Sí, salir</button>
       </div>
   </div>
 </div>
+
+  <!-- MODAL ACCESO ADMINISTRACIÓN (7 clicks en "Inicio") -->
+  <div class="admin-overlay" id="adminLoginOverlay" role="dialog" aria-modal="true" aria-labelledby="adminLoginTitle">
+    <div class="admin-modal">
+      <h2 id="adminLoginTitle" style="margin-top:0;">Administración</h2>
+      <p style="color:var(--text-gray); margin-bottom:20px; font-size:0.9rem;">Introduce la contraseña para gestionar puntos, turnos y personas.</p>
+      <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Contraseña" aria-label="Contraseña de administración" onkeydown="if(event.key==='Enter') tryAdminLogin()">
+      <div class="admin-error" id="adminLoginError"></div>
+      <button class="admin-btn-primary" onclick="tryAdminLogin()">Ingresar</button>
+      <button class="admin-btn-secondary" onclick="closeAdminLogin()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- PANEL DE ADMINISTRACIÓN -->
+  <div id="adminPanel">
+    <div class="admin-panel-header">
+      <button class="header-btn" onclick="closeAdminPanel()" aria-label="Cerrar administración">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <h1>Administración</h1>
+    </div>
+    <div class="admin-tabs" role="tablist" aria-label="Secciones de administración">
+      <div class="admin-tab active" data-tab="puntos" role="tab" aria-selected="true" tabindex="0" onclick="switchAdminTab('puntos')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); switchAdminTab('puntos');}"><span class="tab-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span> Puntos</div>
+      <div class="admin-tab" data-tab="turnos" role="tab" aria-selected="false" tabindex="0" onclick="switchAdminTab('turnos')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); switchAdminTab('turnos');}"><span class="tab-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg></span> Turnos</div>
+      <div class="admin-tab" data-tab="personas" role="tab" aria-selected="false" tabindex="0" onclick="switchAdminTab('personas')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); switchAdminTab('personas');}"><span class="tab-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Personas</div>
+    </div>
+    <div class="scroll-container" id="adminBody" style="padding-top:5px;"></div>
+  </div>
+
+  <!-- FORMULARIO GENÉRICO (puntos / turnos / personas) -->
+  <div class="form-overlay" id="formOverlay" role="dialog" aria-modal="true">
+    <div class="form-sheet" id="formSheet"></div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <div class="app-wrapper">
     <section class="screen" id="list-screen">
-      <div class="header-list" style="display:flex; justify-content:space-between; align-items:center; padding:25px 25px 10px;">
-        <h1 style="margin:0; font-size: 2.2rem;">Inicio</h1>
+      <div class="header-list" style="display:flex; justify-content:space-between; align-items:center; padding:22px 20px 10px; position:relative;">
+        <h1 id="homeTitle" style="margin:0; font-size: 2.2rem;">Inicio</h1>
         <div style="display:flex; gap:12px;">
-          <button class="header-btn" onclick="toggleTheme()"><svg id="themeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 A7 7 0 0 0 21 12.79z"/></svg></button>
-<button class="header-btn" onclick="openLogoutModal()" title="Cerrar Sesión">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-    </svg>        </div>
+          <button class="header-btn" id="menuDotsBtn" onclick="toggleHeaderMenu()" title="Menú" aria-haspopup="true" aria-expanded="false" aria-controls="headerMenu" aria-label="Abrir menú de opciones">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+            </svg>
+          </button>
+        </div>
+
+        <div id="headerMenu" class="header-menu" role="menu" aria-label="Menú de opciones">
+          <div class="header-menu-section-label" id="themeMenuLabel">Apariencia</div>
+          <div id="themeMenu" role="group" aria-labelledby="themeMenuLabel">
+            <div class="header-menu-item" data-theme="light" role="menuitemradio" aria-checked="false" tabindex="0"
+                 onclick="event.stopPropagation(); setTheme('light');"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); event.stopPropagation(); setTheme('light');}">
+              <span class="header-menu-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+              </span>
+              <span>Modo Claro</span>
+              <span class="header-menu-check" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </div>
+            <div class="header-menu-item" data-theme="dark" role="menuitemradio" aria-checked="false" tabindex="0"
+                 onclick="event.stopPropagation(); setTheme('dark');"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); event.stopPropagation(); setTheme('dark');}">
+              <span class="header-menu-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 A7 7 0 0 0 21 12.79z"/></svg>
+              </span>
+              <span>Modo Oscuro</span>
+              <span class="header-menu-check" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </div>
+            <div class="header-menu-item" data-theme="auto" role="menuitemradio" aria-checked="false" tabindex="0"
+                 onclick="event.stopPropagation(); setTheme('auto');"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); event.stopPropagation(); setTheme('auto');}">
+              <span class="header-menu-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </span>
+              <span>Automático</span>
+              <span class="header-menu-check" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </div>
+          </div>
+          <div class="header-menu-divider" role="separator"></div>
+          <div class="header-menu-item" role="menuitem" tabindex="0" onclick="event.stopPropagation(); handleAdminMenuClick();"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); event.stopPropagation(); handleAdminMenuClick();}">
+            <span class="header-menu-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </span>
+            <span>Administrador</span>
+          </div>
+          <div class="header-menu-item danger" role="menuitem" tabindex="0" onclick="event.stopPropagation(); openLogoutModal();"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); event.stopPropagation(); openLogoutModal();}">
+            <span class="header-menu-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </span>
+            <span>Cerrar Sesión</span>
+          </div>
+        </div>
       </div>
 
-      <div style="padding: 0 20px 5px;"> <div style="position:relative; display:flex; align-items:center;">
-          <input type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="handleSearch()" style="width:100%; padding:14px 50px 14px 18px; border-radius:18px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text-main); outline:none;">
-          <button onclick="toggleFilterMenu()" style="position:absolute; right:12px; background:none; border:none; cursor:pointer; color:var(--text-gray);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="10" cy="6" r="2"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="14" cy="12" r="2"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="8" cy="18" r="2"/></svg></button>
+      <div class="search-wrapper">
+        <div class="search-inner">
+          <input type="text" id="searchInput" placeholder="Buscar por nombre…" aria-label="Buscar por nombre" oninput="handleSearch()">
+          <button onclick="toggleFilterMenu()" class="search-filter-btn" aria-label="Abrir filtros" aria-expanded="false" aria-controls="filterMenu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="10" cy="6" r="2"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="14" cy="12" r="2"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="8" cy="18" r="2"/></svg>
+          </button>
         </div>
-        <div id="filterMenu" style="margin-top:10px; padding:15px; background:var(--bg-card); border-radius:15px;">
-  <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-    <div class="filter-chip" onclick="toggleFilter('M')">Mañana</div>
-    <div class="filter-chip" onclick="toggleFilter('T')">Tarde</div>
-    <div class="filter-chip" onclick="toggleFilter('TD')">Disponibles</div>
-    
-    <div onclick="clearFilters()" style="font-size: 0.8rem; color: var(--primary-orange); cursor: pointer; font-weight: 800; margin-left: 10px; text-decoration: underline; line-height: 1;">
-        Quitar filtros
-    </div>
-  </div>
-</div>
-</div>
+        <div id="filterMenu">
+          <div class="filter-panel">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <div class="filter-chip" onclick="toggleFilter('M')">Mañana</div>
+              <div class="filter-chip" onclick="toggleFilter('T')">Tarde</div>
+              <div class="filter-chip" onclick="toggleFilter('TD')">Disponibles</div>
+              <div onclick="clearFilters()" style="font-size:0.8rem; color:var(--primary-orange); cursor:pointer; font-weight:800; margin-left:6px; text-decoration:underline;">Quitar filtros</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div class="scroll-container" id="locationsList" style="padding-top: 5px;"></div>
+<div class="scroll-container" id="locationsList" style="padding-top:8px;"></div>
 
     </section>
 
     <section class="screen" id="detail-screen">
-      <div style="padding: 20px 20px 0;">
-        <button onclick="goBack()" class="header-btn">
-  <svg width="22" height="22" viewBox="0 0 24 24"
-       fill="none" stroke="currentColor" stroke-width="2"
-       stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="15 18 9 12 15 6"/>
-  </svg>
-</button>
+      <div style="padding: 18px 20px 0;">
+        <button onclick="goBack()" class="header-btn" aria-label="Volver">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
       </div>
       <div class="scroll-container" id="detailScrollBody">
-        <h1 id="currentPointTitle" style="margin-top:10px; font-size: 1.8rem;">Punto</h1>
+        <h1 id="currentPointTitle" style="margin-top:12px; margin-bottom:16px; font-size: 1.7rem; line-height:1.2;">Punto</h1>
         <div id="logisticsInfo"></div>
-        <div id="daysRow" style="display:flex; gap:8px; margin: 20px 0; overflow-x:auto;"></div>
+        <div id="daysRow" class="days-row" style="margin: 16px 0;"></div>
         <div id="slotsContainer"></div>
       </div>
     </section>
   </div>
 
-  <div id="turnDetailScreen" class="turn-detail-screen" style="position: fixed; top: 0; left: 100%; width: 100%; height: 100%; background: var(--bg-screen); z-index: 4000; transition: 0.4s; display: flex; flex-direction: column;">
-    <div style="padding: 25px; display: flex; align-items: center; gap: 15px;"><button onclick="closeTurnDetail()" style="background: var(--bg-card); border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; color: var(--text-main);">✕</button><h2 style="margin:0;">Ficha de Turno</h2></div>
+  <div id="turnDetailScreen" class="turn-detail-screen">
+    <div style="padding: 22px 20px 10px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border-color);">
+      <button onclick="closeTurnDetail()" class="header-btn" aria-label="Cerrar detalle del turno">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <h2 style="margin:0; font-size:1.1rem;">Ficha de Turno</h2>
+    </div>
     <div class="scroll-container" id="turnDetailBody"></div>
-    <div id="turnActionBar" style="padding:20px;"></div>
+    <div id="turnActionBar" style="padding:16px 20px 24px;"></div>
   </div>
 
+  <script>
+    // =========================================================
+    // CARGA DE LA LIBRERÍA SUPABASE CON RESPALDO DE VARIOS CDN
+    // =========================================================
+    // Si un CDN está bloqueado (red corporativa, firewall, adblocker)
+    // probamos con otros automáticamente antes de rendirnos. Esto evita
+    // que toda la app dependa de un único dominio externo.
+    function cargarScript(src) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.onload = () => resolve(src);
+        s.onerror = () => reject(new Error('No se pudo cargar: ' + src));
+        document.head.appendChild(s);
+      });
+    }
+
+    const SUPABASE_CDN_URLS = [
+      'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js',
+      'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/supabase/2.45.4/supabase.min.js'
+    ];
+
+    async function cargarSupabaseConRespaldo() {
+      for (const url of SUPABASE_CDN_URLS) {
+        try {
+          await cargarScript(url);
+          if (typeof supabase !== 'undefined') return true;
+        } catch (e) {
+          console.warn('Falló CDN de Supabase, probando el siguiente:', url);
+        }
+      }
+      return false;
+    }
+  </script>
 
   <script>
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT22dGTCsHGc5Qj4EbMxn4XqPoPuUI93UblvVlwu0nPm4FOUzMvLCIv5eTCgjQXS3MiNamBMsBdJ45A/pub?output=csv';
-    
-    const POINT_DATA = {
-      "Clínica Cordillera": { color: "#f36100", days: ['Lunes','Martes','Miercoles','Jueves','Viernes'], guardado: { nombre: "Av. Alejandro Fleming 7806", sub: "Casa Eliana Whittaker", tel: "+56982195443" }, encargado: { nombre: "Douglas García", tel: "+56934574675" } },
-      "Supermercado Lider": { color: "#0056ff", days: ['Lunes','Martes','Miercoles','Jueves','Viernes'], guardado: { nombre: "Av. Alejandro Fleming 7806", sub: "Casa Eliana Whittaker", tel: "+56982195443" }, encargado: { nombre: "Douglas García", tel: "+56934574675" } },
-      "Santa Zita": { color: "#04c92f", days: ['Lunes','Martes','Miercoles','Jueves','Viernes'], guardado: { nombre: "Incahuasi 1549", sub: "Familia Tobar", tel: "+56992357751" }, encargado: { nombre: "Fernando Aldunate", tel: "+56996377733" } },
-      "Visviri/Supermercado Santa Isabel": { color: "#f36100", days: ['Lunes','Martes','Miercoles','Jueves','Viernes'], guardado: { nombre: "Espigas 1625", sub: "Familia Muñoz", tel: "+56987274609" }, encargado: { nombre: "Fernando Aldunate", tel: "+56996377733" } },
-      "Feria de Francisco Bilbao (Curaco)": { color: "#0056ff", days: ['Sabado'], guardado: { nombre: "Duqueco 1965", sub: "Ingrid Arnold", tel: "+56977081786" }, encargado: { nombre: "Germán Cabezas", tel: "+56967883164" } },
-      "Parque Intercomunal": { color: "#04c92f", days: ['Domingo'], guardado: { nombre: "Duqueco 1965", sub: "Ingrid Arnold", tel: "+56977081786" }, encargado: { nombre: "Germán Cabezas", tel: "+56967883164" } },
-      "Patricia": { color: "#f36100", days: ['Domingo'], guardado: { nombre: "Incahuasi 1549", sub: "Familia Tobar", tel: "+56992357751" }, encargado: { nombre: "Fernando Aldunate", tel: "+56996377733" } }
-    };
+    // =========================================================
+    // CONFIGURACIÓN SUPABASE
+    // =========================================================
+    const SUPABASE_URL = 'https://ldqyqiopulizblfspwym.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkcXlxaW9wdWxpemJsZnNwd3ltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5MDMzNTQsImV4cCI6MjA5NzQ3OTM1NH0.KhjIvLBMgDf3UjnPaGaXSyGKnaJoStkEzucEWZKHoB8';
 
-    let allData = [];
+    // Si NINGÚN CDN de Supabase llegó a cargar, 'supabase' no existe.
+    // La inicialización real de 'sb' ocurre dentro de init(), DESPUÉS de
+    // intentar los 3 CDN en cascada (ver cargarSupabaseConRespaldo arriba).
+    // Esto evita que una excepción aquí detenga el resto del script y
+    // deje variables como isAdmin sin inicializar (TDZ).
+    let sb = null;
+    let SUPABASE_LOAD_ERROR = false;
+
+    // =========================================================
+    // ESTADO GLOBAL
+    // =========================================================
+    let PUNTOS = [];
+    let TURNOS = [];
+    let PERSONAS = [];
     let currentDay = '';
-    let currentPoint = "";
+    let currentPointId = null;
     let activeFilters = [];
     let userName = localStorage.getItem('userName') || "";
+    let isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+    let currentAdminTab = 'puntos';
 
-    async function loadExcelData() {
-      const res = await fetch(SHEET_URL);
-      const text = await res.text();
-      const rows = text.split(/\r?\n/).slice(1).filter(r => r.trim());
-      allData = rows.map((r, index) => {
-        const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-        return { id: index, dia: (c[0]||"").trim(), tipo: (c[1]||"").replace(/"/g,"").toUpperCase(), nombres: (c[2]||"").replace(/"/g,""), hora: (c[3]||"").replace(/"/g,""), punto: (c[4]||"").replace(/"/g,"").trim() };
+    // =========================================================
+    // ÍCONOS (sustituyen a los emojis en toda la plataforma)
+    // =========================================================
+    const ICONS = {
+      pin: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+      clock: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg>',
+      users: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+      user: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+      phone: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.98.33 1.94.6 2.87a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.21-1.27a2 2 0 0 1 2.11-.45c.93.27 1.89.47 2.87.6A2 2 0 0 1 22 16.92z"/></svg>',
+      map: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
+      chat: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+      calendar: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+      edit: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+      trash: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>',
+      plus: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+    };
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove('show'), 2600);
+    }
+
+    // =========================================================
+    // CARGA DE DATOS DESDE SUPABASE
+    // =========================================================
+    async function loadAllData() {
+      if (SUPABASE_LOAD_ERROR || !sb) {
+        showToast('No se pudo conectar con la base de datos. Revisa tu conexión y recarga la página.');
+        return;
+      }
+      const [{ data: puntos, error: errP }, { data: turnos, error: errT }, { data: personas, error: errPe }] = await Promise.all([
+        sb.from('puntos').select('*').order('orden', { ascending: true }),
+        sb.from('turnos').select('*'),
+        sb.from('personas').select('*').order('nombre', { ascending: true })
+      ]);
+
+      if (errP || errT || errPe) {
+        console.error(errP || errT || errPe);
+        showToast('Error cargando datos. Revisa la conexión.');
+        return;
+      }
+
+      PUNTOS = puntos || [];
+      TURNOS = (turnos || []).map(t => {
+        const punto = PUNTOS.find(p => p.id === t.punto_id);
+        return {
+          id: t.id,
+          dia: t.dia,
+          tipo: t.tipo,
+          nombres: t.nombres,
+          hora: t.hora,
+          punto: punto ? punto.nombre : '',
+          punto_id: t.punto_id,
+          estado: t.estado,
+          reservado_por: t.reservado_por,
+          persona_ids: Array.isArray(t.persona_ids) ? t.persona_ids : (t.persona_id ? [t.persona_id] : [])
+        };
       });
+      PERSONAS = personas || [];
+
       renderHome();
     }
 
@@ -329,23 +1256,28 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--b
         }
     }
 
+    function checkUserName() {
+        const overlay = document.getElementById('nameOverlay');
+        if (!overlay) return;
+        overlay.style.display = userName ? 'none' : 'flex';
+    }
+
     function renderHome() {
+        checkUserName();
         if(!userName) {
-            document.getElementById('nameOverlay').style.display = 'flex';
             return;
         }
 
         const home = document.getElementById('locationsList');
         home.innerHTML = '';
 
-        // SECCIÓN MIS TURNOS
-        const myShifts = allData.filter(d => d.nombres.toLowerCase().includes(userName.toLowerCase()));
+        const myShifts = TURNOS.filter(d => d.nombres.toLowerCase().includes(userName.toLowerCase()));
         if(myShifts.length > 0) {
             home.innerHTML += `<div class="section-title">Mis Turnos</div>`;
             myShifts.forEach(s => {
-                const color = s.tipo.includes('TD') ? 'var(--primary-green)' : (s.tipo.startsWith('M') ? 'var(--primary-orange)' : 'var(--primary-blue)');
+                const color = s.tipo.includes('TD') ? (s.estado === 'reservado' ? '#e08600' : 'var(--primary-green)') : (s.tipo.startsWith('M') ? 'var(--primary-orange)' : 'var(--primary-blue)');
                 home.innerHTML += `
-                    <div class="my-shift-card" onclick="openTurnDetail(${s.id})">
+                    <div class="my-shift-card" onclick="openTurnDetail('${s.id}')">
                         <div style="display:flex; align-items:center; gap:10px;">
                             <div style="width:12px; height:12px; border-radius:50%; background:${color};"></div>
                             <span style="font-weight:800; font-size:1.1rem;">${s.punto}</span>
@@ -362,26 +1294,30 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--b
             });
         }
 
-        // SECCIÓN LOCACIONES
         home.innerHTML += `<div class="section-title">Locaciones</div>`;
         const grid = document.createElement('div');
         grid.className = "grid-2x2";
-        grid.innerHTML = Object.keys(POINT_DATA).map(name => `
-            <div class="location-card" onclick="selectPoint('${name}')">
-                <div class="status-dot" style="background:${POINT_DATA[name].color}"></div>
-                <h2>${name}</h2>
-            </div>
-        `).join('');
+        if (PUNTOS.length === 0) {
+          grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Aún no hay puntos cargados.</div>`;
+        } else {
+          grid.innerHTML = PUNTOS.map(p => `
+              <div class="location-card" onclick="selectPoint('${p.id}')">
+                  <div class="status-dot" style="background:${p.color}"></div>
+                  <h2>${p.nombre}</h2>
+              </div>
+          `).join('');
+        }
         home.appendChild(grid);
     }
 
-    /* --- LOGICA ORIGINAL PRESERVADA --- */
-    function selectPoint(name) {
-      currentPoint = name; const p = POINT_DATA[name];
-      document.getElementById('currentPointTitle').innerText = name;
-      document.getElementById('logisticsInfo').innerHTML = `<div class="logistics-box orange"><h4>📍 Retiro</h4><p>${p.guardado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.guardado.tel}" class="btn-mini">📞 Llamar</a><a href="http://maps.google.com/?q=${encodeURIComponent(p.guardado.nombre)}" target="_blank" class="btn-mini">🗺️ Mapa</a></div></div><div class="logistics-box"><h4>👤 Encargado</h4><p>${p.encargado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.encargado.tel}" class="btn-mini">📞 Llamar</a></div></div>`;
-      const dRow = document.getElementById('daysRow'); dRow.innerHTML = ''; currentDay = p.days[0];
-      p.days.forEach(d => {
+    function selectPoint(id) {
+      currentPointId = id;
+      const p = PUNTOS.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('currentPointTitle').innerText = p.nombre;
+      document.getElementById('logisticsInfo').innerHTML = `<div class="logistics-box orange"><h4>${ICONS.pin} Retiro</h4><p>${p.retiro_nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.retiro_tel}" class="btn-mini">${ICONS.phone} Llamar</a><a href="http://maps.google.com/?q=${encodeURIComponent(p.retiro_nombre)}" target="_blank" class="btn-mini">${ICONS.map} Mapa</a></div></div><div class="logistics-box"><h4>${ICONS.user} Encargado</h4><p>${p.encargado_nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.encargado_tel}" class="btn-mini">${ICONS.phone} Llamar</a></div></div>`;
+      const dRow = document.getElementById('daysRow'); dRow.innerHTML = ''; currentDay = p.dias[0] || '';
+      (p.dias || []).forEach(d => {
         const b = document.createElement('div'); b.className = `filter-chip ${d === currentDay ? 'active' : ''}`; b.innerText = d.substring(0,3);
         b.onclick = () => { document.querySelectorAll('#daysRow .filter-chip').forEach(x=>x.classList.remove('active')); b.classList.add('active'); currentDay = d; renderShifts(); };
         dRow.appendChild(b);
@@ -392,29 +1328,76 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--b
 
     function renderShifts() {
       const cont = document.getElementById('slotsContainer');
-      const filtered = allData.filter(d => d.dia.toLowerCase() === currentDay.toLowerCase() && d.punto === currentPoint);
+      const pNombre = (PUNTOS.find(x => x.id === currentPointId) || {}).nombre;
+      const filtered = TURNOS.filter(d => d.dia.toLowerCase() === currentDay.toLowerCase() && d.punto === pNombre);
       cont.innerHTML = filtered.map(s => {
         const isTD = s.tipo.includes('TD');
-        return `<div class="slot ${isTD ? 'turno-TD' : (s.tipo.startsWith('T') ? 'turno-T' : 'turno-M')}" onclick="openTurnDetail(${s.id})"><div style="display:flex; justify-content:space-between"><b>${s.nombres}</b><span>➔</span></div><div style="background:rgba(255,255,255,0.2); padding:6px 14px; border-radius:999px; width:fit-content; font-size:0.9rem; font-weight:700;">${s.hora}</div></div>`;
+        const isReservado = isTD && s.estado === 'reservado';
+        const claseColor = isReservado ? 'turno-RESERVADO' : (isTD ? 'turno-TD' : (s.tipo.startsWith('T') ? 'turno-T' : 'turno-M'));
+        const etiqueta = isReservado ? `Reservado por ${s.reservado_por || 'alguien'}` : s.hora;
+        return `<div class="slot ${claseColor}" onclick="openTurnDetail('${s.id}')"><div style="display:flex; justify-content:space-between; align-items:center;"><b style="font-size:1rem;">${s.nombres || (isTD ? 'Disponible' : '')}</b><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div><div class="slot-pill">${etiqueta}</div></div>`;
       }).join('') || '<p style="text-align:center; opacity:0.5; margin-top:20px;">No hay turnos hoy.</p>';
     }
 
     function openTurnDetail(id) {
-      const s = allData.find(x => x.id === id); const p = POINT_DATA[s.punto];
+      const s = TURNOS.find(x => x.id === id);
+      if (!s) return;
+      const p = PUNTOS.find(x => x.nombre === s.punto);
       const isTD = s.tipo.includes('TD'), isM = s.tipo.startsWith('M');
-      const estadoColor = isTD ? 'var(--primary-green)' : 'var(--primary-blue)';
-      document.getElementById('turnDetailBody').innerHTML = `<div style="background:var(--bg-card); border-radius:20px; padding:25px; margin-bottom:20px;"><div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;"><span style="width:fit-content; font-size:0.75rem; font-weight:800; color:${estadoColor}; border:1px solid ${estadoColor}; padding:4px 10px; border-radius:8px;">${isTD?'Disponible':'Ocupado'}</span><span style="font-size:0.85rem; color:var(--text-gray); font-weight:700;">⏰ ${isM?'Turno Mañana':'Turno Tarde'}</span></div><h1 style="margin:0;">${s.nombres}</h1><h3 style="margin:0;">${s.hora}</h3></div><div class="logistics-box orange"><h4>📍 Retiro</h4><p>${p.guardado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p.guardado.tel}" class="btn-mini">📞 Llamar</a><a href="http://maps.google.com/?q=${encodeURIComponent(p.guardado.nombre)}" target="_blank" class="btn-mini">🗺️ Mapa</a></div></div><div class="logistics-box"><h4>👤 Encargado</h4><p>${p.encargado.nombre}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="https://wa.me/${p.encargado.tel.replace('+','')}" target="_blank" class="btn-mini">💬 WhatsApp</a><a href="tel:${p.encargado.tel}" class="btn-mini">📞 Llamar</a></div></div>`;
-      let btns = `<a href="http://maps.google.com/?q=${encodeURIComponent(s.punto)}" target="_blank" style="background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-color); margin-bottom:12px; display:flex; padding:15px; border-radius:15px; justify-content:center; text-decoration:none; font-weight:bold;">📍 Cómo llegar</a>`;
-if (isTD) {
-  const mensaje = `Hola! Quiero inscribirme en el turno disponible:
-📍 Punto: ${s.punto}
-📅 Día: ${s.dia}
-⏰ Hora: ${s.hora}
-👤 Nombre: ${userName}`;
-  
-  btns += `<a href="https://api.whatsapp.com/send?phone=56996377733&text=${encodeURIComponent(mensaje)}" target="_blank" style="background:#25D366; color:white; padding:18px; border-radius:16px; font-weight:800; width:100%; display:flex; justify-content:center; text-decoration:none;">Solicitar Turno</a>`;
-}      document.getElementById('turnActionBar').innerHTML = btns;
+      const isReservado = isTD && s.estado === 'reservado';
+      const estadoColor = isReservado ? '#e08600' : (isTD ? 'var(--primary-green)' : 'var(--primary-blue)');
+      const estadoTexto = isReservado ? `Reservado por ${s.reservado_por || 'alguien'}` : (isTD ? 'Disponible' : 'Ocupado');
+      document.getElementById('turnDetailBody').innerHTML = `<div style="background:var(--bg-card); border-radius:20px; padding:25px; margin-bottom:20px;"><div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;"><span style="width:fit-content; font-size:0.75rem; font-weight:800; color:${estadoColor}; border:1px solid ${estadoColor}; padding:4px 10px; border-radius:8px;">${estadoTexto}</span><span style="display:flex; align-items:center; gap:6px; font-size:0.85rem; color:var(--text-gray); font-weight:700;">${ICONS.clock} ${isM?'Turno Mañana':(isTD?'Turno Disponible':'Turno Tarde')}</span></div><h1 style="margin:0;">${s.nombres || (isTD ? 'Disponible' : '')}</h1><h3 style="margin:0;">${s.hora}</h3></div><div class="logistics-box orange"><h4>${ICONS.pin} Retiro</h4><p>${p ? p.retiro_nombre : ''}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="tel:${p?p.retiro_tel:''}" class="btn-mini">${ICONS.phone} Llamar</a><a href="http://maps.google.com/?q=${encodeURIComponent(p?p.retiro_nombre:'')}" target="_blank" class="btn-mini">${ICONS.map} Mapa</a></div></div><div class="logistics-box"><h4>${ICONS.user} Encargado</h4><p>${p ? p.encargado_nombre : ''}</p><div style="display:flex; gap:8px; margin-top:12px;"><a href="https://wa.me/${p?p.encargado_tel.replace('+',''):''}" target="_blank" class="btn-mini">${ICONS.chat} WhatsApp</a><a href="tel:${p?p.encargado_tel:''}" class="btn-mini">${ICONS.phone} Llamar</a></div></div>`;
+      let btns = `<a href="http://maps.google.com/?q=${encodeURIComponent(s.punto)}" target="_blank" style="background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-color); margin-bottom:12px; display:flex; align-items:center; gap:8px; padding:15px; border-radius:15px; justify-content:center; text-decoration:none; font-weight:bold;">${ICONS.pin} Cómo llegar</a>`;
+      if (isTD && s.estado === 'libre') {
+        const mensaje = `Hola! Quiero inscribirme en el turno disponible:
+Punto: ${s.punto}
+Día: ${s.dia}
+Hora: ${s.hora}
+Nombre: ${userName}`;
+
+        btns += `<button onclick="reservarTurno('${s.id}')" style="background:#25D366; color:white; padding:18px; border-radius:16px; font-weight:800; width:100%; display:flex; justify-content:center; border:none; cursor:pointer; font-size:1rem;">Solicitar Turno</button>`;
+        window._pendingWhatsappMsg = mensaje;
+        window._pendingWhatsappTel = '56996377733';
+      } else if (isReservado) {
+        btns += `<div style="text-align:center; color:var(--text-gray); font-weight:700; padding:14px; font-size:0.9rem;">Este turno ya fue solicitado y está pendiente de confirmación.</div>`;
+        if (isAdmin) {
+          btns += `<button onclick="liberarTurnoAdmin('${s.id}')" style="margin-top:10px; background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-color); padding:14px; border-radius:15px; font-weight:700; width:100%; cursor:pointer;">Liberar turno (admin)</button>`;
+        }
+      }
+      document.getElementById('turnActionBar').innerHTML = btns;
       document.getElementById('turnDetailScreen').style.left = '0';
+    }
+
+    async function reservarTurno(turnoId) {
+      const { error } = await sb.from('turnos')
+        .update({ estado: 'reservado', reservado_por: userName, reservado_at: new Date().toISOString() })
+        .eq('id', turnoId)
+        .eq('estado', 'libre');
+
+      if (error) {
+        console.error(error);
+        showToast('No se pudo reservar el turno. Intenta de nuevo.');
+        return;
+      }
+
+      if (window._pendingWhatsappMsg) {
+        window.open(`https://api.whatsapp.com/send?phone=${window._pendingWhatsappTel}&text=${encodeURIComponent(window._pendingWhatsappMsg)}`, '_blank');
+      }
+
+      showToast('Turno reservado. Quedó marcado para que nadie más lo tome.');
+      await loadAllData();
+      closeTurnDetail();
+    }
+
+    async function liberarTurnoAdmin(turnoId) {
+      const pass = getAdminPassword();
+      if (!pass) { showToast('Sesión admin expirada.'); return; }
+      const { error } = await sb.rpc('admin_liberar_turno', { p_password: pass, p_id: turnoId });
+      if (error) { showToast('Error: ' + error.message); return; }
+      showToast('Turno liberado.');
+      await loadAllData();
+      closeTurnDetail();
     }
 
     function handleSearch() {
@@ -422,15 +1405,14 @@ if (isTD) {
       const home = document.getElementById('locationsList');
       if(!q && !activeFilters.length) { renderHome(); return; }
       
-      let res = allData.filter(r => r.nombres.toLowerCase().includes(q));
+      let res = TURNOS.filter(r => r.nombres.toLowerCase().includes(q));
       
-      // Aplicar filtros activos
       if(activeFilters.length > 0) {
         res = res.filter(r => {
           return activeFilters.some(filter => {
             if(filter === 'M') return r.tipo.startsWith('M');
             if(filter === 'T') return r.tipo.startsWith('T') && !r.tipo.includes('TD');
-            if(filter === 'TD') return r.tipo.includes('TD');
+            if(filter === 'TD') return r.tipo.includes('TD') && r.estado === 'libre';
             return false;
           });
         });
@@ -439,41 +1421,114 @@ if (isTD) {
       home.innerHTML = `<div style="display:grid; gap:10px">${res.map(r => {
         const isTD = r.tipo.includes('TD');
         const isM = r.tipo.startsWith('M');
-        const color = isTD ? 'var(--primary-green)' : (isM ? 'var(--primary-orange)' : 'var(--primary-blue)');
-        return `<div class="logistics-box" onclick="openTurnDetail(${r.id})" style="cursor:pointer; display:flex; align-items:center; gap:14px;"><div style="width:14px; height:14px; border-radius:50%; background:${color}; flex-shrink:0;"></div><div><div style="font-weight:800">${r.nombres}</div><div style="font-size:0.8rem; color:var(--text-gray)">${r.punto} • ${r.dia}</div></div></div>`;
-      }).join('')}</div>`;
+        const isReservado = isTD && r.estado === 'reservado';
+        const color = isReservado ? '#e08600' : (isTD ? 'var(--primary-green)' : (isM ? 'var(--primary-orange)' : 'var(--primary-blue)'));
+        return `<div class="logistics-box" onclick="openTurnDetail('${r.id}')" style="cursor:pointer; display:flex; align-items:center; gap:14px;"><div style="width:14px; height:14px; border-radius:50%; background:${color}; flex-shrink:0;"></div><div><div style="font-weight:800">${r.nombres || (isTD?'Disponible':'')}</div><div style="font-size:0.8rem; color:var(--text-gray)">${r.punto} • ${r.dia}</div></div></div>`;
+      }).join('')}</div>` || '<p style="text-align:center; opacity:0.5; margin-top:20px;">Sin resultados.</p>';
     }
 
-    function toggleFilterMenu() { document.getElementById('filterMenu').classList.toggle('open'); }
+    function toggleFilterMenu() {
+      const menu = document.getElementById('filterMenu');
+      const abrir = menu.classList.toggle('open');
+      const btn = document.querySelector('.search-filter-btn');
+      if (btn) btn.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+    }
     function toggleFilter(f) { event.target.classList.toggle('active'); const i = activeFilters.indexOf(f); if(i>-1) activeFilters.splice(i,1); else activeFilters.push(f); handleSearch(); }
     function clearFilters() {
-    // 1. Vaciar el array de filtros
     activeFilters = [];
-    
-    // 2. Quitar el estado visual "active" de todos los chips del menú
     const chips = document.querySelectorAll('#filterMenu .filter-chip');
     chips.forEach(chip => chip.classList.remove('active'));
-    
-    // 3. Opcional: Limpiar también el buscador de texto si quieres un reinicio total
-    // document.getElementById('searchInput').value = ''; 
-
-    // 4. Refrescar la vista
     handleSearch();
 }
     function goBack() { document.getElementById('detail-screen').classList.remove('active'); }
     function closeTurnDetail() { document.getElementById('turnDetailScreen').style.left = '100%'; }
-    function toggleTheme() { document.body.classList.toggle('dark-mode'); }
-    function toggleChangelog() { const p = document.getElementById('changelogPanel'); p.style.right = p.style.right === '0px' ? '-100%' : '0px'; }
-    
-    function init() {
-      loadExcelData();
-      const historial = [{ version: "11.2.0", cambios: ["DISEÑO: Reducción de espacios muertos.", "NUEVO: Tarjeta de Mis Turnos con detalles completos."] }];
-      document.getElementById('changelogContent').innerHTML = historial.map(item => `<div class="changelog-item"><span style="background:var(--primary-orange); color:white; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:800;">${item.version}</span><ul style="margin:10px 0; padding-left:20px; color:var(--text-gray); font-size:0.85rem">${item.cambios.map(texto => `<li>${texto}</li>`).join('')}</ul></div>`).join('');
+    // =========================================================
+    // TEMA: Claro / Oscuro / Automático (sigue al sistema)
+    // =========================================================
+    const THEME_STORAGE_KEY = 'themeMode';
+    const sistemaPrefiereOscuro = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function getThemeMode() {
+      try { return localStorage.getItem(THEME_STORAGE_KEY) || 'auto'; }
+      catch (err) { return 'auto'; }
+    }
+
+    function aplicarTemaVisual(modo) {
+      const oscuro = modo === 'dark' || (modo === 'auto' && sistemaPrefiereOscuro.matches);
+      document.body.classList.toggle('dark-mode', oscuro);
+
+      // Reflejamos el estado activo en el menú (radio visual + aria-checked)
+      document.querySelectorAll('#themeMenu .header-menu-item[data-theme]').forEach(item => {
+        const activo = item.dataset.theme === modo;
+        item.classList.toggle('active', activo);
+        item.setAttribute('aria-checked', activo ? 'true' : 'false');
+      });
+    }
+
+    function setTheme(modo) {
+      try { localStorage.setItem(THEME_STORAGE_KEY, modo); }
+      catch (err) { /* si localStorage no está disponible, el cambio no persiste */ }
+      aplicarTemaVisual(modo);
+      closeHeaderMenu();
+    }
+
+    // Si el modo activo es "Automático" y el sistema cambia de tema
+    // (por ejemplo, al anochecer), actualizamos la plataforma al instante.
+    sistemaPrefiereOscuro.addEventListener('change', () => {
+      if (getThemeMode() === 'auto') aplicarTemaVisual('auto');
+    });
+
+    async function init() {
+      // Sincroniza el indicador visual (radio activo) del menú de tema
+      // con el modo ya aplicado por el script anti-flash del <head>.
+      aplicarTemaVisual(getThemeMode());
+
+      // Mostrar/ocultar el popup de nombre de inmediato: esto NO depende
+      // de Supabase, así que no debe esperar a la conexión con la base
+      // de datos para funcionar.
+      checkUserName();
+
+      // Registramos el listener del menú de inmediato, sin esperar a
+      // Supabase: el menú (tema, modales) debe funcionar siempre, sin
+      // importar si la base de datos está disponible o no.
+      document.addEventListener('click', (e) => {
+        const menu = document.getElementById('headerMenu');
+        const btn = document.getElementById('menuDotsBtn');
+        if (!menu || !btn) return;
+        if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+          menu.classList.remove('open');
+        }
+      });
+
+      const cargado = await cargarSupabaseConRespaldo();
+      if (!cargado) {
+        SUPABASE_LOAD_ERROR = true;
+        console.error('No se pudo cargar la librería de Supabase desde ningún CDN.');
+        showToast('No se pudo conectar con la base de datos. Revisa tu conexión e inténtalo de nuevo.');
+        return;
+      }
+
+      try {
+        sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch (err) {
+        SUPABASE_LOAD_ERROR = true;
+        console.error('No se pudo inicializar el cliente de Supabase:', err);
+        showToast('No se pudo conectar con la base de datos.');
+        return;
+      }
+
+      loadAllData();
     }
     init();
 
 function openLogoutModal() {
-    document.getElementById('logoutOverlay').style.display = 'flex';
+    try {
+        closeHeaderMenu();
+        document.getElementById('logoutOverlay').style.display = 'flex';
+    } catch (err) {
+        console.error('Error al abrir el modal de cierre de sesión:', err);
+        showToast('No se pudo abrir el menú de salida.');
+    }
 }
 
 function closeLogoutModal() {
@@ -485,7 +1540,482 @@ function confirmLogout() {
     location.reload();
 }
 
+    // =========================================================
+    // MENÚ CONTEXTUAL (3 puntos): Modo Claro/Oscuro, Administrador, Cerrar Sesión
+    // =========================================================
+    function toggleHeaderMenu() {
+      const menu = document.getElementById('headerMenu');
+      const btn = document.getElementById('menuDotsBtn');
+      if (!menu || !btn) return;
+      const abrir = !menu.classList.contains('open');
+      menu.classList.toggle('open', abrir);
+      btn.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+      if (abrir) {
+        const primerItem = menu.querySelector('.header-menu-item');
+        if (primerItem) primerItem.focus();
+      }
+    }
+
+    function closeHeaderMenu() {
+      const menu = document.getElementById('headerMenu');
+      const btn = document.getElementById('menuDotsBtn');
+      if (menu) menu.classList.remove('open');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+
+    // Cierra el menú con la tecla Escape y devuelve el foco al botón
+    // que lo abrió, para una navegación por teclado correcta.
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const menu = document.getElementById('headerMenu');
+      if (menu && menu.classList.contains('open')) {
+        closeHeaderMenu();
+        const btn = document.getElementById('menuDotsBtn');
+        if (btn) btn.focus();
+      }
+    });
+
+    function handleAdminMenuClick() {
+      try {
+        closeHeaderMenu();
+        if (isAdmin) {
+          openAdminPanel();
+        } else {
+          openAdminLogin();
+        }
+      } catch (err) {
+        console.error('Error al abrir Administración:', err);
+        showToast('No se pudo abrir Administración. Revisa la consola.');
+      }
+    }
+
+    function openAdminLogin() {
+      document.getElementById('adminLoginError').textContent = '';
+      document.getElementById('adminPasswordInput').value = '';
+      document.getElementById('adminLoginOverlay').style.display = 'flex';
+      setTimeout(() => document.getElementById('adminPasswordInput').focus(), 100);
+    }
+    function closeAdminLogin() {
+      document.getElementById('adminLoginOverlay').style.display = 'none';
+    }
+
+    async function tryAdminLogin() {
+      const pass = document.getElementById('adminPasswordInput').value;
+      const errEl = document.getElementById('adminLoginError');
+      if (!pass) { errEl.textContent = 'Ingresa la contraseña.'; return; }
+      if (SUPABASE_LOAD_ERROR || !sb) { errEl.textContent = 'Sin conexión con la base de datos. Recarga la página.'; return; }
+
+      const { data, error } = await sb.rpc('verificar_admin_password', { intento: pass });
+      if (error) {
+        console.error('Error en verificar_admin_password:', error);
+        // Mostramos el motivo real (ej: "function does not exist") en vez
+        // de un mensaje genérico, para poder diagnosticar rápido si falta
+        // correr algún script SQL en Supabase.
+        errEl.textContent = 'Error: ' + (error.message || 'No se pudo verificar la contraseña.');
+        return;
+      }
+
+      if (data === true) {
+        isAdmin = true;
+        sessionStorage.setItem('isAdmin', 'true');
+        sessionStorage.setItem('adminPassword', pass);
+        closeAdminLogin();
+        openAdminPanel();
+      } else {
+        errEl.textContent = 'Contraseña incorrecta.';
+      }
+    }
+
+    function getAdminPassword() {
+      return sessionStorage.getItem('adminPassword') || '';
+    }
+
+    // =========================================================
+    // ADMINISTRACIÓN: PANEL PRINCIPAL
+    // =========================================================
+    function openAdminPanel() {
+      document.getElementById('adminPanel').style.display = 'flex';
+      switchAdminTab('puntos');
+    }
+    function closeAdminPanel() {
+      document.getElementById('adminPanel').style.display = 'none';
+    }
+
+    function switchAdminTab(tab) {
+      currentAdminTab = tab;
+      document.querySelectorAll('.admin-tab').forEach(t => {
+        const activo = t.dataset.tab === tab;
+        t.classList.toggle('active', activo);
+        t.setAttribute('aria-selected', activo ? 'true' : 'false');
+      });
+      if (tab === 'puntos') renderAdminPuntos();
+      if (tab === 'turnos') renderAdminTurnos();
+      if (tab === 'personas') renderAdminPersonas();
+    }
+
+    // ---------- PUNTOS ----------
+    function renderAdminPuntos() {
+      const body = document.getElementById('adminBody');
+      const items = PUNTOS.map(p => `
+        <div class="admin-list-item">
+          <div style="width:34px; height:34px; border-radius:50%; background:${p.color}; flex-shrink:0;"></div>
+          <div class="info">
+            <div class="title">${p.nombre}</div>
+            <div class="sub">${(p.dias||[]).join(', ')}</div>
+          </div>
+          <div class="admin-actions">
+            <button class="icon-btn" onclick="openPuntoForm('${p.id}')" aria-label="Editar ${p.nombre.replace(/"/g,'&quot;')}">${ICONS.edit}</button>
+            <button class="icon-btn danger" onclick="confirmDeletePunto('${p.id}')" aria-label="Borrar ${p.nombre.replace(/"/g,'&quot;')}">${ICONS.trash}</button>
+          </div>
+        </div>
+      `).join('') || `<div class="empty-state">No hay puntos creados aún.</div>`;
+      body.innerHTML = items + `<button class="fab-add" onclick="openPuntoForm()">${ICONS.plus} Agregar punto</button>`;
+    }
+
+    function openPuntoForm(id) {
+      const p = id ? PUNTOS.find(x => x.id === id) : null;
+      const dias = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'];
+      const selDias = p ? p.dias : [];
+      document.getElementById('formSheet').innerHTML = `
+        <h2 style="margin-top:0;">${p ? 'Editar punto' : 'Nuevo punto'}</h2>
+        <div class="form-group"><label for="f_nombre">Nombre del punto</label><input class="form-input" id="f_nombre" value="${p ? p.nombre.replace(/"/g,'&quot;') : ''}"></div>
+        <div class="form-group"><label for="f_color">Color identificador</label><input class="form-input" id="f_color" type="color" value="${p ? p.color : '#f36100'}" style="height:46px; padding:6px;"></div>
+        <div class="form-group">
+          <label id="f_dias_label">Días activos</label>
+          <div class="chip-multi" id="f_dias" role="group" aria-labelledby="f_dias_label">
+            ${dias.map(d => `<div class="filter-chip ${selDias.includes(d) ? 'active' : ''}" data-dia="${d}" role="button" tabindex="0" aria-pressed="${selDias.includes(d)}" onclick="this.classList.toggle('active'); this.setAttribute('aria-pressed', this.classList.contains('active'));" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}">${d}</div>`).join('')}
+          </div>
+        </div>
+        <div class="form-group"><label for="f_retiro_nombre">Dirección de retiro</label><input class="form-input" id="f_retiro_nombre" value="${p ? (p.retiro_nombre||'').replace(/"/g,'&quot;') : ''}"></div>
+        <div class="form-group"><label for="f_retiro_sub">Referencia (ej: "Casa de...")</label><input class="form-input" id="f_retiro_sub" value="${p ? (p.retiro_sub||'').replace(/"/g,'&quot;') : ''}"></div>
+        <div class="form-group"><label for="f_retiro_tel">Teléfono de retiro</label><input class="form-input" id="f_retiro_tel" placeholder="+569..." value="${p ? (p.retiro_tel||'') : ''}"></div>
+        <div class="form-group"><label for="f_encargado_nombre">Nombre del encargado</label><input class="form-input" id="f_encargado_nombre" value="${p ? (p.encargado_nombre||'').replace(/"/g,'&quot;') : ''}"></div>
+        <div class="form-group"><label for="f_encargado_tel">Teléfono del encargado</label><input class="form-input" id="f_encargado_tel" placeholder="+569..." value="${p ? (p.encargado_tel||'') : ''}"></div>
+        <div class="form-group"><label for="f_orden">Orden (posición en la grilla)</label><input class="form-input" id="f_orden" type="number" value="${p ? p.orden : (PUNTOS.length+1)}"></div>
+        <div class="section-title" style="margin-top:18px; margin-bottom:6px;">Horarios predeterminados</div>
+        <p style="margin:0 0 12px; font-size:0.8rem; color:var(--text-gray);">Al crear un turno de este tipo en este punto, el horario se rellenará solo (igual se puede editar caso por caso).</p>
+        <div class="form-group"><label for="f_horario_m">Horario Mañana (M)</label><input class="form-input" id="f_horario_m" placeholder="ej: 09:00 - 11:00" value="${p ? (p.horario_m||'').replace(/"/g,'&quot;') : ''}"></div>
+        <div class="form-group"><label for="f_horario_t">Horario Tarde (T)</label><input class="form-input" id="f_horario_t" placeholder="ej: 16:00 - 18:00" value="${p ? (p.horario_t||'').replace(/"/g,'&quot;') : ''}"></div>
+        <div class="form-group"><label for="f_horario_td">Horario Disponible (TD)</label><input class="form-input" id="f_horario_td" placeholder="ej: 11:00 - 13:00" value="${p ? (p.horario_td||'').replace(/"/g,'&quot;') : ''}"></div>
+        <div class="form-actions">
+          <button class="admin-btn-secondary" style="margin:0;" onclick="closeForm()">Cancelar</button>
+          <button class="admin-btn-primary" onclick="savePunto('${p ? p.id : ''}')">${p ? 'Guardar cambios' : 'Crear punto'}</button>
+        </div>
+      `;
+      openForm();
+    }
+
+    async function savePunto(id) {
+      const nombre = document.getElementById('f_nombre').value.trim();
+      if (!nombre) { showToast('El nombre es obligatorio.'); return; }
+      const color = document.getElementById('f_color').value;
+      const dias = Array.from(document.querySelectorAll('#f_dias .filter-chip.active')).map(c => c.dataset.dia);
+      const retiro_nombre = document.getElementById('f_retiro_nombre').value.trim();
+      const retiro_sub = document.getElementById('f_retiro_sub').value.trim();
+      const retiro_tel = document.getElementById('f_retiro_tel').value.trim();
+      const encargado_nombre = document.getElementById('f_encargado_nombre').value.trim();
+      const encargado_tel = document.getElementById('f_encargado_tel').value.trim();
+      const orden = parseInt(document.getElementById('f_orden').value || '0', 10);
+      const horario_m = document.getElementById('f_horario_m').value.trim();
+      const horario_t = document.getElementById('f_horario_t').value.trim();
+      const horario_td = document.getElementById('f_horario_td').value.trim();
+      const pass = getAdminPassword();
+
+      let res;
+      if (id) {
+        res = await sb.rpc('admin_editar_punto', {
+          p_password: pass, p_id: id, p_nombre: nombre, p_color: color, p_dias: dias,
+          p_retiro_nombre: retiro_nombre, p_retiro_sub: retiro_sub, p_retiro_tel: retiro_tel,
+          p_encargado_nombre: encargado_nombre, p_encargado_tel: encargado_tel, p_orden: orden,
+          p_horario_m: horario_m, p_horario_t: horario_t, p_horario_td: horario_td
+        });
+      } else {
+        res = await sb.rpc('admin_crear_punto', {
+          p_password: pass, p_nombre: nombre, p_color: color, p_dias: dias,
+          p_retiro_nombre: retiro_nombre, p_retiro_sub: retiro_sub, p_retiro_tel: retiro_tel,
+          p_encargado_nombre: encargado_nombre, p_encargado_tel: encargado_tel, p_orden: orden,
+          p_horario_m: horario_m, p_horario_t: horario_t, p_horario_td: horario_td
+        });
+      }
+
+      if (res.error) { showToast('Error: ' + res.error.message); return; }
+      showToast(id ? 'Punto actualizado.' : 'Punto creado.');
+      closeForm();
+      await loadAllData();
+      renderAdminPuntos();
+    }
+
+    function confirmDeletePunto(id) {
+      const p = PUNTOS.find(x => x.id === id);
+      if (!confirm(`¿Borrar "${p ? p.nombre : 'este punto'}"? Esto también borrará sus turnos asociados.`)) return;
+      deletePunto(id);
+    }
+    async function deletePunto(id) {
+      const pass = getAdminPassword();
+      const { error } = await sb.rpc('admin_borrar_punto', { p_password: pass, p_id: id });
+      if (error) { showToast('Error: ' + error.message); return; }
+      showToast('Punto eliminado.');
+      await loadAllData();
+      renderAdminPuntos();
+    }
+
+    // ---------- TURNOS ----------
+    function renderAdminTurnos() {
+      const body = document.getElementById('adminBody');
+      if (PUNTOS.length === 0) {
+        body.innerHTML = `<div class="empty-state">Primero crea un punto en la pestaña "Puntos".</div>`;
+        return;
+      }
+      const items = TURNOS.map(t => {
+        const isTD = t.tipo.includes('TD');
+        const isReservado = isTD && t.estado === 'reservado';
+        const color = isReservado ? '#e08600' : (isTD ? 'var(--primary-green)' : (t.tipo.startsWith('M') ? 'var(--primary-orange)' : 'var(--primary-blue)'));
+        const estadoTxt = isReservado ? `Reservado (${t.reservado_por || ''})` : (isTD ? 'Disponible' : 'Ocupado');
+        return `
+          <div class="admin-list-item">
+            <div style="width:12px; height:12px; border-radius:50%; background:${color}; flex-shrink:0;"></div>
+            <div class="info">
+              <div class="title">${t.nombres || estadoTxt}</div>
+              <div class="sub">${t.punto} • ${t.dia} • ${t.hora || ''} ${isTD ? '• ' + estadoTxt : ''}</div>
+            </div>
+            <div class="admin-actions">
+              <button class="icon-btn" onclick="openTurnoForm('${t.id}')" aria-label="Editar turno">${ICONS.edit}</button>
+              <button class="icon-btn danger" onclick="confirmDeleteTurno('${t.id}')" aria-label="Borrar turno">${ICONS.trash}</button>
+            </div>
+          </div>
+        `;
+      }).join('') || `<div class="empty-state">No hay turnos creados aún.</div>`;
+      body.innerHTML = items + `<button class="fab-add" onclick="openTurnoForm()">${ICONS.plus} Agregar turno</button>`;
+    }
+
+    function openTurnoForm(id) {
+      const t = id ? TURNOS.find(x => x.id === id) : null;
+      const puntoIdActual = t ? (PUNTOS.find(p => p.nombre === t.punto) || {}).id : (PUNTOS[0] && PUNTOS[0].id);
+      const dias = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'];
+      document.getElementById('formSheet').innerHTML = `
+        <h2 style="margin-top:0;">${t ? 'Editar turno' : 'Nuevo turno'}</h2>
+        <div class="form-group">
+          <label for="t_punto">Punto</label>
+          <select class="form-select" id="t_punto" onchange="aplicarHorarioAutomatico()">
+            ${PUNTOS.map(p => `<option value="${p.id}" ${p.id === puntoIdActual ? 'selected' : ''}>${p.nombre}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="t_dia">Día</label>
+            <select class="form-select" id="t_dia">
+              ${dias.map(d => `<option value="${d}" ${t && t.dia === d ? 'selected' : ''}>${d}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="t_tipo">Tipo</label>
+            <select class="form-select" id="t_tipo" onchange="onTipoTurnoChange()">
+              <option value="M" ${t && t.tipo === 'M' ? 'selected' : ''}>Mañana</option>
+              <option value="T" ${t && t.tipo === 'T' ? 'selected' : ''}>Tarde</option>
+              <option value="TD" ${t && t.tipo === 'TD' ? 'selected' : ''}>Disponible (TD)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label for="t_hora">Horario</label><input class="form-input" id="t_hora" placeholder="ej: 09:00 - 11:00" value="${t ? (t.hora||'').replace(/"/g,'&quot;') : ''}"></div>
+        <div class="form-group">
+          <label id="t_personas_label">Personas asignadas (máx. 3)</label>
+          <div class="chip-multi" id="t_personas" role="group" aria-labelledby="t_personas_label">
+            ${PERSONAS.map(p => `<div class="filter-chip ${t && (t.persona_ids||[]).includes(p.id) ? 'active' : ''}" data-persona-id="${p.id}" role="button" tabindex="0" aria-pressed="${t && (t.persona_ids||[]).includes(p.id) ? 'true' : 'false'}" onclick="togglePersonaChip(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); togglePersonaChip(this);}">${p.nombre}</div>`).join('') || '<span style="font-size:0.85rem; color:var(--text-gray);">No hay personas en el catálogo todavía.</span>'}
+          </div>
+        </div>
+        <div class="form-group" id="t_estado_group" style="${t && t.tipo === 'TD' || (!t) ? '' : 'display:none;'}">
+          <label for="t_estado">Estado (solo turnos Disponibles)</label>
+          <select class="form-select" id="t_estado">
+            <option value="libre" ${(!t || t.estado === 'libre') ? 'selected' : ''}>Libre</option>
+            <option value="reservado" ${t && t.estado === 'reservado' ? 'selected' : ''}>Reservado</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="admin-btn-secondary" style="margin:0;" onclick="closeForm()">Cancelar</button>
+          <button class="admin-btn-primary" onclick="saveTurno('${t ? t.id : ''}')">${t ? 'Guardar cambios' : 'Crear turno'}</button>
+        </div>
+      `;
+      openForm();
+      onTipoTurnoChange();
+      // Si es un turno nuevo (sin horario guardado todavía), rellenamos
+      // el horario sugerido según el punto y tipo ya seleccionados.
+      if (!t) aplicarHorarioAutomatico();
+    }
+
+    // Máximo de personas que se pueden asignar a un mismo turno.
+    const MAX_PERSONAS_POR_TURNO = 3;
+
+    function togglePersonaChip(el) {
+      const yaActivo = el.classList.contains('active');
+      if (!yaActivo) {
+        const activos = document.querySelectorAll('#t_personas .filter-chip.active').length;
+        if (activos >= MAX_PERSONAS_POR_TURNO) {
+          showToast(`Máximo ${MAX_PERSONAS_POR_TURNO} personas por turno.`);
+          return;
+        }
+      }
+      el.classList.toggle('active');
+      el.setAttribute('aria-pressed', el.classList.contains('active') ? 'true' : 'false');
+    }
+
+    // Busca el horario predeterminado del punto seleccionado según el
+    // tipo de turno (M/T/TD) y lo coloca en el campo Horario, SOLO si el
+    // punto tiene ese horario configurado. El campo sigue siendo editable
+    // a mano por si un turno puntual necesita un horario distinto.
+    function aplicarHorarioAutomatico() {
+      const puntoSel = document.getElementById('t_punto');
+      const tipoSel = document.getElementById('t_tipo');
+      const horaInput = document.getElementById('t_hora');
+      if (!puntoSel || !tipoSel || !horaInput) return;
+
+      const punto = PUNTOS.find(p => p.id === puntoSel.value);
+      if (!punto) return;
+
+      const horarioPorTipo = { M: punto.horario_m, T: punto.horario_t, TD: punto.horario_td };
+      const horarioSugerido = horarioPorTipo[tipoSel.value] || '';
+
+      // Solo autocompletamos si el campo está vacío o si todavía tiene
+      // el valor sugerido anterior (para no pisar algo que el usuario
+      // ya escribió a mano para este turno en particular).
+      const eraAutomatico = horaInput.value === '' || horaInput.dataset.autollenado === '1';
+      if (horarioSugerido && eraAutomatico) {
+        horaInput.value = horarioSugerido;
+        horaInput.dataset.autollenado = '1';
+      }
+    }
+
+    function onTipoTurnoChange() {
+      const tipo = document.getElementById('t_tipo').value;
+      document.getElementById('t_estado_group').style.display = tipo === 'TD' ? '' : 'none';
+      aplicarHorarioAutomatico();
+    }
+
+    async function saveTurno(id) {
+      const punto_id = document.getElementById('t_punto').value;
+      const dia = document.getElementById('t_dia').value;
+      const tipo = document.getElementById('t_tipo').value;
+      const hora = document.getElementById('t_hora').value.trim();
+      const persona_ids = Array.from(document.querySelectorAll('#t_personas .filter-chip.active')).map(c => c.dataset.personaId);
+      const nombres = persona_ids
+        .map(pid => (PERSONAS.find(p => p.id === pid) || {}).nombre)
+        .filter(Boolean)
+        .join(', ');
+      const estadoSel = document.getElementById('t_estado') ? document.getElementById('t_estado').value : null;
+      const estado = tipo === 'TD' ? (estadoSel || 'libre') : 'ocupado';
+
+      if (!punto_id || !dia || !tipo) { showToast('Completa punto, día y tipo.'); return; }
+
+      const pass = getAdminPassword();
+      let res;
+      if (id) {
+        res = await sb.rpc('admin_editar_turno', {
+          p_password: pass, p_id: id, p_punto_id: punto_id, p_dia: dia, p_tipo: tipo,
+          p_hora: hora, p_nombres: nombres, p_persona_ids: persona_ids, p_estado: estado
+        });
+      } else {
+        res = await sb.rpc('admin_crear_turno', {
+          p_password: pass, p_punto_id: punto_id, p_dia: dia, p_tipo: tipo,
+          p_hora: hora, p_nombres: nombres, p_persona_ids: persona_ids, p_estado: estado
+        });
+      }
+
+      if (res.error) { showToast('Error: ' + res.error.message); return; }
+      showToast(id ? 'Turno actualizado.' : 'Turno creado.');
+      closeForm();
+      await loadAllData();
+      renderAdminTurnos();
+    }
+
+    function confirmDeleteTurno(id) {
+      if (!confirm('¿Borrar este turno?')) return;
+      deleteTurno(id);
+    }
+    async function deleteTurno(id) {
+      const pass = getAdminPassword();
+      const { error } = await sb.rpc('admin_borrar_turno', { p_password: pass, p_id: id });
+      if (error) { showToast('Error: ' + error.message); return; }
+      showToast('Turno eliminado.');
+      await loadAllData();
+      renderAdminTurnos();
+    }
+
+    // ---------- PERSONAS ----------
+    function renderAdminPersonas() {
+      const body = document.getElementById('adminBody');
+      const items = PERSONAS.map(p => `
+        <div class="admin-list-item">
+          <div style="width:34px; height:34px; border-radius:50%; background:${p.activo ? 'var(--primary-green)' : 'var(--text-gray)'}; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:white; font-weight:800;">${p.nombre.charAt(0).toUpperCase()}</div>
+          <div class="info">
+            <div class="title">${p.nombre}</div>
+            <div class="sub">${p.telefono || 'Sin teléfono'} ${p.activo ? '' : '• Inactivo'}</div>
+          </div>
+          <div class="admin-actions">
+            <button class="icon-btn" onclick="openPersonaForm('${p.id}')" aria-label="Editar ${p.nombre.replace(/"/g,'&quot;')}">${ICONS.edit}</button>
+            <button class="icon-btn danger" onclick="confirmDeletePersona('${p.id}')" aria-label="Borrar ${p.nombre.replace(/"/g,'&quot;')}">${ICONS.trash}</button>
+          </div>
+        </div>
+      `).join('') || `<div class="empty-state">No hay personas registradas aún.</div>`;
+      body.innerHTML = items + `<button class="fab-add" onclick="openPersonaForm()">${ICONS.plus} Agregar persona</button>`;
+    }
+
+    function openPersonaForm(id) {
+      const p = id ? PERSONAS.find(x => x.id === id) : null;
+      document.getElementById('formSheet').innerHTML = `
+        <h2 style="margin-top:0;">${p ? 'Editar persona' : 'Nueva persona'}</h2>
+        <div class="form-group"><label for="pe_nombre">Nombre</label><input class="form-input" id="pe_nombre" value="${p ? p.nombre.replace(/"/g,'&quot;') : ''}"></div>
+        <div class="form-group"><label for="pe_telefono">Teléfono (opcional)</label><input class="form-input" id="pe_telefono" placeholder="+569..." value="${p ? (p.telefono||'') : ''}"></div>
+        ${p ? `<div class="form-group"><label for="pe_activo">Estado</label>
+          <select class="form-select" id="pe_activo">
+            <option value="true" ${p.activo ? 'selected' : ''}>Activo</option>
+            <option value="false" ${!p.activo ? 'selected' : ''}>Inactivo</option>
+          </select>
+        </div>` : ''}
+        <div class="form-actions">
+          <button class="admin-btn-secondary" style="margin:0;" onclick="closeForm()">Cancelar</button>
+          <button class="admin-btn-primary" onclick="savePersona('${p ? p.id : ''}')">${p ? 'Guardar cambios' : 'Agregar persona'}</button>
+        </div>
+      `;
+      openForm();
+    }
+
+    async function savePersona(id) {
+      const nombre = document.getElementById('pe_nombre').value.trim();
+      if (!nombre) { showToast('El nombre es obligatorio.'); return; }
+      const telefono = document.getElementById('pe_telefono').value.trim();
+      const pass = getAdminPassword();
+
+      let res;
+      if (id) {
+        const activo = document.getElementById('pe_activo').value === 'true';
+        res = await sb.rpc('admin_editar_persona', { p_password: pass, p_id: id, p_nombre: nombre, p_telefono: telefono, p_activo: activo });
+      } else {
+        res = await sb.rpc('admin_crear_persona', { p_password: pass, p_nombre: nombre, p_telefono: telefono });
+      }
+
+      if (res.error) { showToast('Error: ' + res.error.message); return; }
+      showToast(id ? 'Persona actualizada.' : 'Persona agregada.');
+      closeForm();
+      await loadAllData();
+      renderAdminPersonas();
+    }
+
+    function confirmDeletePersona(id) {
+      if (!confirm('¿Borrar esta persona del catálogo?')) return;
+      deletePersona(id);
+    }
+    async function deletePersona(id) {
+      const pass = getAdminPassword();
+      const { error } = await sb.rpc('admin_borrar_persona', { p_password: pass, p_id: id });
+      if (error) { showToast('Error: ' + error.message); return; }
+      showToast('Persona eliminada.');
+      await loadAllData();
+      renderAdminPersonas();
+    }
+
+    // ---------- FORM OVERLAY HELPERS ----------
+    function openForm() { document.getElementById('formOverlay').style.display = 'flex'; }
+    function closeForm() { document.getElementById('formOverlay').style.display = 'none'; }
+
   </script>
 </body>
 </html>
-
